@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include "raylib.h"
+#include "collision.h"
 
 namespace Player
 {
@@ -15,10 +16,10 @@ namespace Player
     extern float speed;
     extern bool on_floor;
     extern bool is_jump;
-
+    extern bool left, right, top, bottom;
+    extern Collision::Side collision_side;
+    extern float collision_array[4];
     enum State { IDLE, JUMP, RUN};
     extern State state;
-
 };
-
 #endif

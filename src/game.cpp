@@ -16,6 +16,8 @@ Game::Game()
 
     block = LoadTexture("../assets/gfx/block.png");
 
+    Player::left = Player::right = Player::top = Player::bottom = false;
+
     loadLevel("../assets/levels/level0.txt");
 }
 
@@ -23,6 +25,8 @@ void Game::loadLevel(const std::string fileName)
 {
     FILE *level = fopen(fileName.c_str(), "r");
     float x, y, w, h;
+    int numOfCollisionBoxes;
+
 
     for(int i=0;i<30;i++)
     {
@@ -73,18 +77,56 @@ void Game::run()
         }
 
 
-        for(int i=0;i<numOfCollisionBoxes;i++)
+        for(int i=0;i<collisionBoxes.size();i++)
         {
             if(Collision::AABB(Player::rec, collisionBoxes[i]))
             {
-                Player::on_floor = true;
-                Player::jump_height = Player::JUMP_HEIGHT;
-                Player::is_jump = false;
-                Player::fall_speed = 0.0f;
-            }
-            else 
-                Player::on_floor = false;          
+                Player::collision_side = Collision::getCollisionSide(Player::rec, collisionBoxes[i]);
+                if(Player::collision_side == Collision::Side::BOTTOM)
+                {
+                    Player::bottom = true;
+                    Player::collision_array[0] = Collision::getBottom(Player::rec) - Collision::getTop(collisionBoxes[i]);
+                }
+                if(Player::collision_side == Collision::Side::RIGHT)
+                {
+                    Player::right = true;
+                    Player::collision_array[1] = Collision::getRight(Player::rec) - Collision::getLeft(collisionBoxes[i]);
+                }
+                if(Player::collision_side == Collision::Side::LEFT)
+                {
+                    Player::left = true;
+                    Player::collision_array[2] = Collision::getRight(collisionBoxes[i]) - Collision::getLeft(Player::rec);
+                }
+                if(Player::collision_side == Collision::Side::TOP)
+                {
+                    Player::top = true;
+                    Player::collision_array[3] = Collision::getBottom(collisionBoxes[i]) - Collision::getTop(Player::rec);
+                }
+            }                          
         }
+        
+        if(!Player::bottom)
+        {
+            Player::on_floor = false;
+        }
+        if(Player::bottom)
+        {
+            Player::rec.y -= Player::collision_array[0];
+            Player::on_floor = true;
+            Player::jump_height = Player::JUMP_HEIGHT;
+            Player::is_jump = false;
+            Player::fall_speed = 0.0f;
+            Player::bottom = false;
+        }
+        if(Player::left)
+        {
+            Player::rec.x += Player::collision_array[2];
+            Player::left = false;
+        }
+
+
+        //debug
+        sprintf(debug, "diff = %f", Player::collision_array[0]);
   
         //render
         BeginDrawing();
@@ -100,10 +142,13 @@ void Game::run()
                         DrawTexture(block, (j * 32) - offsetX, (i * 32) - offsetY, WHITE);
                 }
             }
-
-
+            //debug
+            // for(int i=0;i<collisionBoxes.size();i++)
+            // {
+            //     DrawRectangle(collisionBoxes[i].x - offsetX, collisionBoxes[i].y - offsetY, collisionBoxes[i].width, collisionBoxes[i].height, GREEN);
+            // }
             DrawRectangle(Player::rec.x - offsetX, Player::rec.y - offsetY, 32, 32, RED);
-            //DrawRectangle(collisionBoxes[0].x - offsetX, collisionBoxes[0].y - offsetY, collisionBoxes[0].width, collisionBoxes[0].height, GREEN);
+            DrawText(debug, WIDTH/2, HEIGHT/2, 20, RAYWHITE);
         EndDrawing();
     }
 }

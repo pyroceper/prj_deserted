@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <cstdio>
 #include <vector>
 #include "raylib.h"
 #include "collision.h"
@@ -27,7 +28,8 @@ class Game
         int map[30][30] = {0};
 
         std::vector<Rectangle> collisionBoxes;
-        int numOfCollisionBoxes = 0;
+
+        char debug[250] = {0};
 
         Rectangle testGround;
 
