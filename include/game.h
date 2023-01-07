@@ -6,6 +6,7 @@
 #include "collision.h"
 #include "player.h"
 
+
 class Game
 {
     public:
@@ -17,8 +18,13 @@ class Game
         const int HEIGHT = 720;
         const std::string TITLE = "PRJ DESERTED";
         const int FPS = 60;
+        const float SCALE = 4.0f;
 
         Rectangle testGround;
+
+        Texture2D bgLayer1;
+        Texture2D bgLayer2;
+        Texture2D bgLayer3;
 
 };
 

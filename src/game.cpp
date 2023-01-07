@@ -4,6 +4,7 @@ Game::Game()
 {
     InitWindow(WIDTH, HEIGHT, TITLE.c_str());
     SetTargetFPS(FPS);
+
     Player::rec.x = (WIDTH/2) - 20;
     Player::rec.y = HEIGHT/2;
 
@@ -11,6 +12,11 @@ Game::Game()
     testGround.y = 500;
     testGround.width = 630;
     testGround.height = 20;
+
+    bgLayer1 = LoadTexture("../assets/gfx/background_layer_1.png");
+    bgLayer2 = LoadTexture("../assets/gfx/background_layer_2.png");
+    bgLayer3 = LoadTexture("../assets/gfx/background_layer_3.png");
+
 }
 
 void Game::run()
@@ -18,9 +24,9 @@ void Game::run()
     while(!WindowShouldClose())
     {
         //input
-        if(IsKeyDown(KEY_RIGHT)) Player::rec.x++;
-        if(IsKeyDown(KEY_LEFT)) Player::rec.x--;
-        if(IsKeyDown(KEY_UP) && Player::on_floor) Player::is_jump = true;
+        if(IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) Player::rec.x += 1.0f * Player::speed * GetFrameTime();
+        if(IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))  Player::rec.x -= 1.0f * Player::speed * GetFrameTime();
+        if((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) && Player::on_floor) Player::is_jump = true;
 
         //logic
         if(Player::is_jump)
@@ -53,8 +59,10 @@ void Game::run()
         //render
         BeginDrawing();
             ClearBackground(BLACK);
-            DrawText(TITLE.c_str(), WIDTH/2, HEIGHT/2, 20, RAYWHITE);
-            DrawRectangle(Player::rec.x, Player::rec.y, 32, 16, RED);
+            DrawTextureEx(bgLayer1, {0, 0}, 0.0f, SCALE, WHITE);
+            DrawTextureEx(bgLayer2, {0, 0}, 0.0f, SCALE, WHITE);
+            DrawTextureEx(bgLayer3, {0, 0}, 0.0f, SCALE, WHITE);
+            DrawRectangle(Player::rec.x, Player::rec.y, Player::rec.width, Player::rec.height, RED);
             DrawRectangle(testGround.x, testGround.y, testGround.width, testGround.height, GREEN);
         EndDrawing();
     }
@@ -63,6 +71,9 @@ void Game::run()
 
 Game::~Game()
 {
+    UnloadTexture(bgLayer1);
+    UnloadTexture(bgLayer2);
+    UnloadTexture(bgLayer3);
     CloseWindow();
 }
 
