@@ -23,13 +23,17 @@ class Game
         int offsetX = 0;
         int offsetY = 0;
 
-        int map[30][30];
+        int map[30][30] = {0};
 
         Rectangle testGround;
+
+        Texture2D block;
 
         Texture2D bgLayer1;
         Texture2D bgLayer2;
         Texture2D bgLayer3;
+
+        void loadLevel();
 
 };
 
