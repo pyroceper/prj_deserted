@@ -16,6 +16,8 @@ class Game
         const std::string TITLE = "PRJ DESERTED";
         const int FPS = 60;
 
+        Vector2 player;
+
 };
 
 
