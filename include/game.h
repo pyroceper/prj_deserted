@@ -2,11 +2,12 @@
 #define GAME_H
 
 #include <string>
+#include <iostream>
+#include <vector>
 #include "raylib.h"
 #include "collision.h"
 #include "player.h"
 #include "camera.h"
-
 
 class Game
 {
@@ -25,6 +26,9 @@ class Game
 
         int map[30][30] = {0};
 
+        std::vector<Rectangle> collisionBoxes;
+        int numOfCollisionBoxes = 0;
+
         Rectangle testGround;
 
         Texture2D block;
@@ -33,7 +37,11 @@ class Game
         Texture2D bgLayer2;
         Texture2D bgLayer3;
 
-        void loadLevel();
+        Vector2 bgLayer1Pos {0, 0};
+        Vector2 bgLayer2Pos {0, 0};
+        Vector2 bgLayer3Pos {0, 0};
+
+        void loadLevel(const std::string fileName);
 
 };
 

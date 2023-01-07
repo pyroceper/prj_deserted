@@ -5,9 +5,6 @@ Game::Game()
     InitWindow(WIDTH, HEIGHT, TITLE.c_str());
     SetTargetFPS(FPS);
 
-    Player::rec.x = (WIDTH/2) - 20;
-    Player::rec.y = HEIGHT/2;
-
     testGround.x = 0;
     testGround.y = 500;
     testGround.width = 630;
@@ -19,12 +16,13 @@ Game::Game()
 
     block = LoadTexture("../assets/gfx/block.png");
 
-    loadLevel();
+    loadLevel("../assets/levels/level0.txt");
 }
 
-void Game::loadLevel()
+void Game::loadLevel(const std::string fileName)
 {
-    FILE *level = fopen("../assets/levels/level0.txt", "r");
+    FILE *level = fopen(fileName.c_str(), "r");
+    float x, y, w, h;
 
     for(int i=0;i<30;i++)
     {
@@ -32,6 +30,13 @@ void Game::loadLevel()
         {
             fscanf(level, "%d", &map[i][j]);
         }
+    }
+    fscanf(level, "%f %f", &Player::rec.x, &Player::rec.y);
+    fscanf(level, "%d", &numOfCollisionBoxes);
+    for(int i=0;i<numOfCollisionBoxes;i++)
+    {
+        fscanf(level, "%f %f %f %f", &x, &y, &w, &h);
+        collisionBoxes.push_back({x, y, w, h});
     }
 }
 
@@ -67,22 +72,26 @@ void Game::run()
             Player::fall_speed += 0.2f;
         }
 
-        if(Collision::AABB(Player::rec, testGround))
-        {
-            Player::on_floor = true;
-            Player::jump_height = Player::JUMP_HEIGHT;
-            Player::is_jump = false;
-            Player::fall_speed = 0.0f;
-        }
-        else 
-            Player::on_floor = false;        
 
+        for(int i=0;i<numOfCollisionBoxes;i++)
+        {
+            if(Collision::AABB(Player::rec, collisionBoxes[i]))
+            {
+                Player::on_floor = true;
+                Player::jump_height = Player::JUMP_HEIGHT;
+                Player::is_jump = false;
+                Player::fall_speed = 0.0f;
+            }
+            else 
+                Player::on_floor = false;          
+        }
+  
         //render
         BeginDrawing();
             ClearBackground(BLACK);
-            DrawTextureEx(bgLayer1, {0, 0}, 0.0f, SCALE, WHITE);
-            DrawTextureEx(bgLayer2, {0, 0}, 0.0f, SCALE, WHITE);
-            DrawTextureEx(bgLayer3, {0, 0}, 0.0f, SCALE, WHITE);
+            DrawTextureEx(bgLayer1, bgLayer1Pos, 0.0f, SCALE, WHITE);
+            DrawTextureEx(bgLayer2, bgLayer2Pos, 0.0f, SCALE, WHITE);
+            DrawTextureEx(bgLayer3, bgLayer3Pos, 0.0f, SCALE, WHITE);
             for(int i=0;i<30;i++)
             {
                 for(int j=0;j<30;j++)
@@ -94,7 +103,7 @@ void Game::run()
 
 
             DrawRectangle(Player::rec.x - offsetX, Player::rec.y - offsetY, 32, 32, RED);
-            DrawRectangle(testGround.x - offsetX, testGround.y - offsetY, testGround.width, testGround.height, GREEN);
+            //DrawRectangle(collisionBoxes[0].x - offsetX, collisionBoxes[0].y - offsetY, collisionBoxes[0].width, collisionBoxes[0].height, GREEN);
         EndDrawing();
     }
 }
