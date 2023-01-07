@@ -3,6 +3,8 @@
 
 #include <string>
 #include "raylib.h"
+#include "collision.h"
+#include "player.h"
 
 class Game
 {
@@ -16,7 +18,7 @@ class Game
         const std::string TITLE = "PRJ DESERTED";
         const int FPS = 60;
 
-        Vector2 player;
+        Rectangle testGround;
 
 };
 
