@@ -29,6 +29,10 @@ void Game::run()
         if((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) && Player::on_floor) Player::is_jump = true;
 
         //logic
+        Cam::followTarget((int)Player::rec.x, (int)Player::rec.y, 740, 740);
+        offsetX = static_cast<int>(Cam::offset.x);
+        offsetY = static_cast<int>(Cam::offset.y);
+
         if(Player::is_jump)
         {
             Player::rec.y -= 1.0f * Player::jump_height * GetFrameTime();
@@ -62,8 +66,8 @@ void Game::run()
             DrawTextureEx(bgLayer1, {0, 0}, 0.0f, SCALE, WHITE);
             DrawTextureEx(bgLayer2, {0, 0}, 0.0f, SCALE, WHITE);
             DrawTextureEx(bgLayer3, {0, 0}, 0.0f, SCALE, WHITE);
-            DrawRectangle(Player::rec.x, Player::rec.y, Player::rec.width, Player::rec.height, RED);
-            DrawRectangle(testGround.x, testGround.y, testGround.width, testGround.height, GREEN);
+            DrawRectangle(Player::rec.x - offsetX, Player::rec.y - offsetY, 32, 32, RED);
+            DrawRectangle(testGround.x - offsetX, testGround.y - offsetY, testGround.width, testGround.height, GREEN);
         EndDrawing();
     }
 }

@@ -5,6 +5,7 @@
 #include "raylib.h"
 #include "collision.h"
 #include "player.h"
+#include "camera.h"
 
 
 class Game
@@ -19,6 +20,8 @@ class Game
         const std::string TITLE = "PRJ DESERTED";
         const int FPS = 60;
         const float SCALE = 4.0f;
+        int offsetX = 0;
+        int offsetY = 0;
 
         Rectangle testGround;
 
