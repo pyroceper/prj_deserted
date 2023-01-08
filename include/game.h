@@ -11,6 +11,7 @@
 #include "enemy.h"
 #include "flip_box.h"
 #include "camera.h"
+#include "pickup.h"
 
 const int ROWS = 60;
 const int COLS = 60;
@@ -35,6 +36,7 @@ class Game
         std::vector<Rectangle> collisionBoxes;
         int num_of_active_enemies = 0;
         int num_of_flip_boxes = 0;
+        int num_of_pickups = 0;
 
         char debug[250] = {0};
 
@@ -55,6 +57,8 @@ class Game
         Texture2D enemy_orange[7];
         Texture2D enemy_orange_hurt;
         Texture2D *current_enemy_orange = nullptr;
+
+        Texture2D fish_pickup;
 
         Vector2 bgLayer1Pos {0, 0};
         Vector2 bgLayer2Pos {0, 0};

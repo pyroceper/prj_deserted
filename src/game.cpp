@@ -59,6 +59,8 @@ Game::Game()
     current_kitty_attack = &kitty_attack[0];
 
     current_enemy_orange = &enemy_orange[0];
+
+    fish_pickup = LoadTexture("../assets/gfx/fish.png");
     
 
     Player::left = Player::right = Player::top = Player::bottom = false;
@@ -108,6 +110,16 @@ void Game::loadLevel(const std::string fileName)
         FlipBox::rect[i].x = x;
         FlipBox::rect[i].y = y;
         num_of_flip_boxes++;
+    }
+    fscanf(level, "%d", &n);
+    for(int i=0;i<n;i++)
+    {
+        fscanf(level, "%f %f", &x, &y);
+        Pickup::rect[i].x = x;
+        Pickup::rect[i].y = y;
+        Pickup::rect[i].width = Pickup::rect[i].height = 32;
+        Pickup::is_active[i] = true;
+        num_of_pickups++;
     }
 
     fclose(level);
@@ -197,6 +209,14 @@ void Game::collisionHandler()
     {
         Player::rec.x -= Player::collision_array[1];
         Player::right = false;
+    }
+
+    for(int i=0;i<num_of_pickups;i++)
+    {
+        if(Collision::AABB(Player::rec, Pickup::rect[i]))
+        {
+            Pickup::is_active[i] = false;
+        }
     }
 }
 
@@ -385,7 +405,7 @@ void Game::enemyHandler()
         else if(!Enemy::is_active[i] && Enemy::is_dead)
         {
             Enemy::death_timer[i] += 1.0f * GetFrameTime();
-            if(Enemy::death_timer[i] > 1.0f)
+            if(Enemy::death_timer[i] > 0.1f)
             { 
                 Enemy::death_timer[i] = 1.0f;
             }
@@ -475,6 +495,11 @@ void Game::render()
         //     DrawRectangle(collisionBoxes[i].x - offsetX, collisionBoxes[i].y - offsetY, collisionBoxes[i].width, collisionBoxes[i].height, GREEN);
         // }
         //DrawRectangle(Player::rec.x - offsetX, Player::rec.y - offsetY, 32, 32, RED);
+        for(int i=0;i<num_of_pickups;i++)
+        {
+            if(Pickup::is_active[i])
+                DrawTextureEx(fish_pickup, {Pickup::rect[i].x - offsetX, Pickup::rect[i].y - offsetY}, 0.0f, 1.45f, WHITE);
+        }
         if(!Player::is_running && !Player::is_jump && !Player::is_attack)
             DrawTexturePro(*current_kitty, (Rectangle){0, 0, 16 * Player::is_left, 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0,0}, 0.f, WHITE);
         else if(Player::is_jump || Player::fall_speed)
@@ -549,6 +574,7 @@ Game::~Game()
         UnloadTexture(enemy_orange[i]);
     }
     UnloadTexture(enemy_orange_hurt);
+    UnloadTexture(fish_pickup);
     CloseWindow();
 }
 
