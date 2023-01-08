@@ -3,6 +3,7 @@
 Game::Game()
 {
     InitWindow(WIDTH, HEIGHT, TITLE.c_str());
+    InitAudioDevice();
     SetTargetFPS(FPS);
 
     for(int i=0;i<50;i++)
@@ -53,6 +54,14 @@ Game::Game()
     enemy_orange[5] = LoadTexture("../assets/gfx/enemies/orange/orange6.png");
 
     enemy_orange_hurt = LoadTexture("../assets/gfx/enemies/orange/hurt.png");
+
+    fx_hurt = LoadSound("../assets/sfx/hurt.wav");
+    fx_pickup = LoadSound("../assets/sfx/pickup.wav");
+    fx_jump = LoadSound("../assets/sfx/jump.wav");
+
+    bg_music = LoadMusicStream("../assets/sfx/Forest.mp3");
+
+    PlayMusicStream(bg_music);
 
     current_kitty = &kitty[0];
     current_kitty_walk = &kitty_walk[0];
@@ -152,7 +161,11 @@ void Game::inputHandler()
         Player::is_running = true;
         Player::is_left = -1;
     }
-    if((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) && Player::on_floor) Player::is_jump = true;
+    if((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) && Player::on_floor) 
+    {
+        Player::is_jump = true;
+        PlaySound(fx_jump);
+    }
     if(IsKeyDown(KEY_SPACE))
         Player::is_attack = true;
 }
@@ -213,6 +226,10 @@ void Game::collisionHandler()
 
     for(int i=0;i<num_of_pickups;i++)
     {
+        if(Collision::AABB(Player::rec, Pickup::rect[i]) && Pickup::is_active[i])
+        {
+            PlaySound(fx_pickup);
+        }
         if(Collision::AABB(Player::rec, Pickup::rect[i]))
         {
             Pickup::is_active[i] = false;
@@ -248,6 +265,11 @@ void Game::playerMovement()
         Player::rec.y += Player::fall_speed * Player::GRAVITY * GetFrameTime();
         Player::fall_speed += 0.2f;
     }
+
+    if(Player::rec.x < 0)
+        Player::rec.x = 0;
+    if(Player::rec.x > 1880.f)
+        Player::rec.x = 1880.f;
 }
 
 void Game::playerAnimation()
@@ -389,6 +411,7 @@ void Game::enemyCollisionHandler(int index)
     {
         Enemy::is_active[index] = false;
         Enemy::is_dead[index] = true;
+        PlaySound(fx_hurt);
     }
 }
 
@@ -537,6 +560,9 @@ void Game::run()
         //input
         inputHandler();
 
+        //music
+        UpdateMusicStream(bg_music);
+
         //logic
         camera();
         playerMovement();
@@ -578,6 +604,11 @@ Game::~Game()
     }
     UnloadTexture(enemy_orange_hurt);
     UnloadTexture(fish_pickup);
+    UnloadSound(fx_hurt);
+    UnloadSound(fx_pickup);
+    UnloadSound(fx_jump);
+    UnloadMusicStream(bg_music);
+    CloseAudioDevice();
     CloseWindow();
 }
 
