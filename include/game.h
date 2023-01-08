@@ -10,6 +10,9 @@
 #include "player.h"
 #include "camera.h"
 
+const int ROWS = 60;
+const int COLS = 60;
+
 class Game
 {
     public:
@@ -25,7 +28,7 @@ class Game
         int offsetX = 0;
         int offsetY = 0;
 
-        int map[30][30] = {0};
+        int map[ROWS][COLS] = {0};
 
         std::vector<Rectangle> collisionBoxes;
 
@@ -33,7 +36,7 @@ class Game
 
         Rectangle testGround;
 
-        Texture2D block;
+        Texture2D block[3];
 
         Texture2D bgLayer1;
         Texture2D bgLayer2;

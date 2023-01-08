@@ -14,7 +14,9 @@ Game::Game()
     bgLayer2 = LoadTexture("../assets/gfx/background_layer_2.png");
     bgLayer3 = LoadTexture("../assets/gfx/background_layer_3.png");
 
-    block = LoadTexture("../assets/gfx/block.png");
+    block[0] = LoadTexture("../assets/gfx/block.png");
+    block[1] = LoadTexture("../assets/gfx/block_plain.png");
+    block[2] = LoadTexture("../assets/gfx/block_grass.png");
 
     Player::left = Player::right = Player::top = Player::bottom = false;
 
@@ -28,9 +30,9 @@ void Game::loadLevel(const std::string fileName)
     int numOfCollisionBoxes;
 
 
-    for(int i=0;i<30;i++)
+    for(int i=0;i<ROWS;i++)
     {
-        for(int j=0;j<30;j++)
+        for(int j=0;j<COLS;j++)
         {
             fscanf(level, "%d", &map[i][j]);
         }
@@ -106,6 +108,7 @@ void Game::camera()
     Cam::followTarget(Player::rec.x, Player::rec.y, 740, 740);
     offsetX = static_cast<int>(Cam::offset.x);
     offsetY = static_cast<int>(Cam::offset.y);
+    offsetY -= 250;
 }
 
 void Game::playerMovement()
@@ -135,12 +138,27 @@ void Game::render()
         DrawTextureEx(bgLayer1, bgLayer1Pos, 0.0f, SCALE, WHITE);
         DrawTextureEx(bgLayer2, bgLayer2Pos, 0.0f, SCALE, WHITE);
         DrawTextureEx(bgLayer3, bgLayer3Pos, 0.0f, SCALE, WHITE);
-        for(int i=0;i<30;i++)
+        for(int i=0;i<ROWS;i++)
         {
-            for(int j=0;j<30;j++)
+            for(int j=0;j<COLS;j++)
             {
-                if(map[i][j])
-                    DrawTexture(block, (j * 32) - offsetX, (i * 32) - offsetY, WHITE);
+                switch(map[i][j])
+                {
+                    case 0: break;
+                    case 2:
+                        DrawTexture(block[2], (j * 32) - offsetX, (i * 32) - offsetY, WHITE);
+                        break;
+                    case 6:
+                        DrawTexture(block[0], (j * 32) - offsetX, (i * 32) - offsetY, WHITE);
+                        break;
+                    
+                    case 17:
+                        DrawTexture(block[1], (j * 32) - offsetX, (i * 32) - offsetY, WHITE);
+                        break;
+
+                    default:
+                        DrawRectangle((j * 32) - offsetX, (i * 32) - offsetY, 32, 32, ORANGE);
+                }
             }
         }
         //debug
@@ -167,7 +185,7 @@ void Game::run()
         collisionHandler();
   
         //debug
-        sprintf(debug, "diff = %f", Player::collision_array[0]);
+        sprintf(debug, "x = %f, y = %f; x = %f, y = %f", Player::rec.x, Player::rec.y, Cam::offset.x, Cam::offset.y);
   
         //render
         render();
@@ -180,7 +198,9 @@ Game::~Game()
     UnloadTexture(bgLayer1);
     UnloadTexture(bgLayer2);
     UnloadTexture(bgLayer3);
-    UnloadTexture(block);
+    UnloadTexture(block[0]);
+    UnloadTexture(block[1]);
+    UnloadTexture(block[2]);
     CloseWindow();
 }
 
