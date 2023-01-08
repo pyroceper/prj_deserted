@@ -103,7 +103,7 @@ void Game::collisionHandler()
 
 void Game::camera()
 {
-    Cam::followTarget((int)Player::rec.x, (int)Player::rec.y, 740, 740);
+    Cam::followTarget(Player::rec.x, Player::rec.y, 740, 740);
     offsetX = static_cast<int>(Cam::offset.x);
     offsetY = static_cast<int>(Cam::offset.y);
 }
