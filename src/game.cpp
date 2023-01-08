@@ -294,10 +294,14 @@ void Game::render()
         //     DrawRectangle(collisionBoxes[i].x - offsetX, collisionBoxes[i].y - offsetY, collisionBoxes[i].width, collisionBoxes[i].height, GREEN);
         // }
         //DrawRectangle(Player::rec.x - offsetX, Player::rec.y - offsetY, 32, 32, RED);
-        if(!Player::is_running)
+        if(!Player::is_running && !Player::is_jump)
             DrawTexturePro(*current_kitty, (Rectangle){0, 0, 16 * Player::is_left, 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0,0}, 0.f, WHITE);
-        else
+        else if(Player::is_jump)
+            DrawTexturePro(kitty_walk[5], (Rectangle){0, 0, 16 * Player::is_left, 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0,0}, 0.f, WHITE);
+        else 
             DrawTexturePro(*current_kitty_walk, (Rectangle){0, 0, 16 * Player::is_left, 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0,0}, 0.f, WHITE);
+
+
 
         DrawText(debug, 10, HEIGHT/2, 20, RAYWHITE);
     EndDrawing();
