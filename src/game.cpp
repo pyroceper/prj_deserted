@@ -296,7 +296,7 @@ void Game::render()
         //DrawRectangle(Player::rec.x - offsetX, Player::rec.y - offsetY, 32, 32, RED);
         if(!Player::is_running && !Player::is_jump)
             DrawTexturePro(*current_kitty, (Rectangle){0, 0, 16 * Player::is_left, 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0,0}, 0.f, WHITE);
-        else if(Player::is_jump)
+        else if(Player::is_jump || Player::fall_speed)
             DrawTexturePro(kitty_walk[5], (Rectangle){0, 0, 16 * Player::is_left, 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0,0}, 0.f, WHITE);
         else 
             DrawTexturePro(*current_kitty_walk, (Rectangle){0, 0, 16 * Player::is_left, 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0,0}, 0.f, WHITE);
