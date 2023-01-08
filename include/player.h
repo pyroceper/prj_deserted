@@ -17,6 +17,7 @@ namespace Player
     extern bool on_floor;
     extern bool is_jump;
     extern bool is_running;
+    extern int is_left;
     extern bool left, right, top, bottom;
     extern Collision::Side collision_side;
     extern float collision_array[4];

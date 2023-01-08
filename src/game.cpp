@@ -79,6 +79,7 @@ void Game::inputHandler()
             bgLayer3Pos.x -= 15.0f * GetFrameTime();
         }
         Player::is_running = true;
+        Player::is_left = 1;
     }
     if(IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) 
     {
@@ -90,6 +91,7 @@ void Game::inputHandler()
             bgLayer3Pos.x += 15.0f * GetFrameTime();
          }
         Player::is_running = true;
+        Player::is_left = -1;
     }
     if((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) && Player::on_floor) Player::is_jump = true;
 }
@@ -293,11 +295,9 @@ void Game::render()
         // }
         //DrawRectangle(Player::rec.x - offsetX, Player::rec.y - offsetY, 32, 32, RED);
         if(!Player::is_running)
-            DrawTextureEx(*current_kitty, {Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32}, 0.0f, 3.0f, WHITE);
+            DrawTexturePro(*current_kitty, (Rectangle){0, 0, 16 * Player::is_left, 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0,0}, 0.f, WHITE);
         else
-            DrawTextureEx(*current_kitty_walk, {Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32}, 0.0f, 3.0f, WHITE);
-
-        //DrawTexturePro(kitty_walk[0], (Rectangle){0, 0, -16, 16}, (Rectangle){0, 0, 16 * 3, 16 * 3}, {0,0}, 0.f, WHITE);
+            DrawTexturePro(*current_kitty_walk, (Rectangle){0, 0, 16 * Player::is_left, 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0,0}, 0.f, WHITE);
 
         DrawText(debug, 10, HEIGHT/2, 20, RAYWHITE);
     EndDrawing();
