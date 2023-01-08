@@ -24,7 +24,7 @@ class Game
         const int HEIGHT = 720;
         const std::string TITLE = "PRJ DESERTED";
         const int FPS = 60;
-        const float SCALE = 4.0f;
+        const float SCALE = 4.1f;
         int offsetX = 0;
         int offsetY = 0;
 

@@ -48,8 +48,26 @@ void Game::loadLevel(const std::string fileName)
 
 void Game::inputHandler()
 {
-    if(IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) Player::rec.x += 1.0f * Player::speed * GetFrameTime();
-    if(IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))  Player::rec.x -= 1.0f * Player::speed * GetFrameTime();
+    if(IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) 
+    {
+        Player::rec.x += 1.0f * Player::speed * GetFrameTime();
+        if(!Player::right && offsetX != 0 && offsetX < 640)
+        {
+            bgLayer1Pos.x -= 2.0f * GetFrameTime();
+            bgLayer2Pos.x -= 5.0f * GetFrameTime();
+            bgLayer3Pos.x -= 15.0f * GetFrameTime();
+        }
+    }
+    if(IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) 
+    {
+         Player::rec.x -= 1.0f * Player::speed * GetFrameTime();
+         if(!Player::left && offsetX != 0 && offsetX < 640)
+         {
+            bgLayer1Pos.x += 2.0f * GetFrameTime();
+            bgLayer2Pos.x += 5.0f * GetFrameTime();
+            bgLayer3Pos.x += 15.0f * GetFrameTime();
+         }
+    }
     if((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) && Player::on_floor) Player::is_jump = true;
 }
 
@@ -101,6 +119,11 @@ void Game::collisionHandler()
         Player::rec.x += Player::collision_array[2];
         Player::left = false;
     }
+    if(Player::right)
+    {
+        Player::rec.x -= Player::collision_array[1];
+        Player::right = false;
+    }
 }
 
 void Game::camera()
@@ -109,6 +132,8 @@ void Game::camera()
     offsetX = static_cast<int>(Cam::offset.x);
     offsetY = static_cast<int>(Cam::offset.y);
     offsetY -= 250;
+    if(offsetX > 640)
+        offsetX = 640;
 }
 
 void Game::playerMovement()
