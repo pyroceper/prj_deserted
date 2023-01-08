@@ -17,12 +17,13 @@ namespace Player
     extern bool on_floor;
     extern bool is_jump;
     extern bool is_running;
+    extern bool is_attack;
     extern int is_left;
     extern bool left, right, top, bottom;
     extern Collision::Side collision_side;
     extern float collision_array[4];
     extern float animation_idle_tick;
     extern float animation_walk_tick;
-
+    extern float animation_attack_tick;
 };
 #endif

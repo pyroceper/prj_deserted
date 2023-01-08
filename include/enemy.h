@@ -12,8 +12,12 @@ namespace Enemy
     extern const float GRAVITY;
     extern int is_left[50];
     extern bool is_active[50];
+    extern bool is_dead[50];
     enum Type { PATROL, NONE};
     extern Type type[50];
+    extern float animation_tick[50];
+    extern float animation_death_tick[50];
+    extern float death_timer[50];
 };
 
 #endif

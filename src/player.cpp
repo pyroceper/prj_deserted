@@ -14,10 +14,12 @@ namespace Player
     bool on_floor = false; // change this!
     bool is_jump = false;
     bool is_running = false;
+    bool is_attack = false;
     int is_left = 1; // 1 -> right, -1 -> left
     bool left, right, top, bottom;
     Collision::Side collision_side = Collision::Side::NONE;
     float collision_array[4] = {0.f};
     float animation_idle_tick = 0.0f;
     float animation_walk_tick = 0.0f;
+    float animation_attack_tick = 0.0f;
 };

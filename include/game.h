@@ -46,9 +46,15 @@ class Game
 
         Texture2D kitty[5];
         Texture2D kitty_walk[8];
+        Texture2D kitty_attack[7];
 
         Texture2D *current_kitty = nullptr;
         Texture2D *current_kitty_walk = nullptr;
+        Texture2D *current_kitty_attack = nullptr;
+
+        Texture2D enemy_orange[7];
+        Texture2D enemy_orange_hurt;
+        Texture2D *current_enemy_orange = nullptr;
 
         Vector2 bgLayer1Pos {0, 0};
         Vector2 bgLayer2Pos {0, 0};
@@ -63,6 +69,7 @@ class Game
         void enemyHandler();
         void enemyThink(int index);
         void enemyCollisionHandler(int index);
+        void enemyAnimation(int index);
         void render();
 
 };
