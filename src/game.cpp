@@ -18,6 +18,16 @@ Game::Game()
     block[1] = LoadTexture("../assets/gfx/block_plain.png");
     block[2] = LoadTexture("../assets/gfx/block_grass.png");
 
+    lamp = LoadTexture("../assets/gfx/lamp.png");
+
+    
+    kitty[0] = LoadTexture("../assets/gfx/kitty/idle_1/kitty_idle1.png");
+    kitty[1] = LoadTexture("../assets/gfx/kitty/idle_1/kitty_idle2.png");
+    kitty[2] = LoadTexture("../assets/gfx/kitty/idle_1/kitty_idle3.png");
+    kitty[3] = LoadTexture("../assets/gfx/kitty/idle_1/kitty_idle4.png");
+
+    current_kitty = &kitty[0];
+
     Player::left = Player::right = Player::top = Player::bottom = false;
 
     loadLevel("../assets/levels/level0.txt");
@@ -156,6 +166,37 @@ void Game::playerMovement()
     }
 }
 
+void Game::playerAnimation()
+{
+    Player::animation_tick += 1.0f * GetFrameTime();
+    if(Player::animation_tick > 0.2f)
+    {
+        Player::animation_tick = 0.f;
+        if(current_kitty == &kitty[0])
+        {
+            current_kitty = &kitty[1];
+            return;
+        }
+        if(current_kitty == &kitty[1])
+        {
+            current_kitty = &kitty[2];
+            return;
+        }
+        if(current_kitty == &kitty[2])
+        {
+            current_kitty = &kitty[3];
+            return;
+        }
+        if(current_kitty == &kitty[3])
+        {
+            current_kitty = &kitty[0];
+            return;
+        }
+    }
+
+}
+
+
 void Game::render()
 {
     BeginDrawing();
@@ -186,14 +227,16 @@ void Game::render()
                 }
             }
         }
+        DrawTextureEx(lamp, {128.0f - offsetX, 1682.0f - offsetY}, 0.0f, 2.5f, WHITE);
         //debug
         // for(int i=0;i<collisionBoxes.size();i++)
         // {
         //     DrawRectangle(collisionBoxes[i].x - offsetX, collisionBoxes[i].y - offsetY, collisionBoxes[i].width, collisionBoxes[i].height, GREEN);
         // }
         DrawRectangle(Player::rec.x - offsetX, Player::rec.y - offsetY, 32, 32, RED);
+        DrawTextureEx(*current_kitty, {Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32}, 0.0f, 3.0f, WHITE);
 
-        DrawText(debug, WIDTH/2, HEIGHT/2, 20, RAYWHITE);
+        DrawText(debug, 10, HEIGHT/2, 20, RAYWHITE);
     EndDrawing();
 }
 
@@ -208,9 +251,10 @@ void Game::run()
         camera();
         playerMovement();
         collisionHandler();
+        playerAnimation();
   
         //debug
-        sprintf(debug, "x = %f, y = %f; x = %f, y = %f", Player::rec.x, Player::rec.y, Cam::offset.x, Cam::offset.y);
+        sprintf(debug, "x = %f, y = %f; x = %f, y = %f, time = %f", Player::rec.x, Player::rec.y, Cam::offset.x, Cam::offset.y, Player::animation_tick);
   
         //render
         render();
@@ -226,6 +270,11 @@ Game::~Game()
     UnloadTexture(block[0]);
     UnloadTexture(block[1]);
     UnloadTexture(block[2]);
+    UnloadTexture(lamp);
+    for(int i=0;i<4;i++)
+    {
+        UnloadTexture(kitty[i]);
+    }
     CloseWindow();
 }
 

@@ -37,10 +37,14 @@ class Game
         Rectangle testGround;
 
         Texture2D block[3];
-
+        Texture2D lamp;
         Texture2D bgLayer1;
         Texture2D bgLayer2;
         Texture2D bgLayer3;
+
+        Texture2D kitty[5];
+
+        Texture2D *current_kitty = nullptr;
 
         Vector2 bgLayer1Pos {0, 0};
         Vector2 bgLayer2Pos {0, 0};
@@ -51,6 +55,7 @@ class Game
         void collisionHandler();
         void camera();
         void playerMovement();
+        void playerAnimation();
         void render();
 
 };

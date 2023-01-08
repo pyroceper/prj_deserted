@@ -19,6 +19,7 @@ namespace Player
     extern bool left, right, top, bottom;
     extern Collision::Side collision_side;
     extern float collision_array[4];
+    extern float animation_tick;
     enum State { IDLE, JUMP, RUN};
     extern State state;
 };
