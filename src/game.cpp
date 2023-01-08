@@ -472,6 +472,9 @@ void Game::render()
                 switch(map[i][j])
                 {
                     case 0: break;
+                    case 166:
+                    case 167:
+                    case 168:
                     case 2:
                         DrawTexture(block[2], (j * 32) - offsetX, (i * 32) - offsetY, WHITE);
                         break;
@@ -484,7 +487,7 @@ void Game::render()
                         break;
 
                     default:
-                        DrawRectangle((j * 32) - offsetX, (i * 32) - offsetY, 32, 32, ORANGE);
+                        DrawRectangle((j * 32) - offsetX, (i * 32) - offsetY, 32, 32, GREEN);
                 }
             }
         }
@@ -519,9 +522,9 @@ void Game::render()
                 DrawTexturePro(enemy_orange_hurt, (Rectangle){0, 0, 32 * Enemy::is_left[i], 32}, (Rectangle){Enemy::rect[i].x - offsetX, Enemy::rect[i].y - offsetY - 32, 64, 64}, {0,0}, 0.f, WHITE);
  
         }
-        // DrawRectangle(FlipBox::rect[0].x - offsetX, FlipBox::rect[0].y - offsetY, 32, 32, ORANGE);
-        // DrawRectangle(FlipBox::rect[1].x - offsetX, FlipBox::rect[1].y - offsetY, 32, 32, ORANGE);
-        // DrawRectangle(FlipBox::rect[2].x - offsetX, FlipBox::rect[2].y - offsetY, 32, 32, ORANGE);
+        DrawRectangle(FlipBox::rect[0].x - offsetX, FlipBox::rect[0].y - offsetY, 32, 32, ORANGE);
+        DrawRectangle(FlipBox::rect[1].x - offsetX, FlipBox::rect[1].y - offsetY, 32, 32, ORANGE);
+        DrawRectangle(FlipBox::rect[2].x - offsetX, FlipBox::rect[2].y - offsetY, 32, 32, ORANGE);
 
         DrawText(debug, 10, HEIGHT/2, 20, RAYWHITE);
     EndDrawing();
