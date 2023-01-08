@@ -14,6 +14,9 @@ Game::Game()
         Enemy::is_dead[i] = false;
     }
 
+    title = LoadTexture("../assets/gfx/title.png");
+    tx_menu = LoadTexture("../assets/gfx/menu.png");
+
     bgLayer1 = LoadTexture("../assets/gfx/background_layer_1.png");
     bgLayer2 = LoadTexture("../assets/gfx/background_layer_2.png");
     bgLayer3 = LoadTexture("../assets/gfx/background_layer_3.png");
@@ -24,7 +27,6 @@ Game::Game()
 
     lamp = LoadTexture("../assets/gfx/lamp.png");
 
-    
     kitty[0] = LoadTexture("../assets/gfx/kitty/idle_1/kitty_idle1.png");
     kitty[1] = LoadTexture("../assets/gfx/kitty/idle_1/kitty_idle2.png");
     kitty[2] = LoadTexture("../assets/gfx/kitty/idle_1/kitty_idle3.png");
@@ -228,6 +230,8 @@ void Game::collisionHandler()
         Player::right = false;
     }
 
+    //ono almost out of time ;-;
+
     for(int i=0;i<num_of_pickups;i++)
     {
         if(Collision::AABB(Player::rec, Pickup::rect[i]) && Pickup::is_active[i])
@@ -239,7 +243,12 @@ void Game::collisionHandler()
         {
             Pickup::is_active[i] = false;
         }
+        if(i == 3) // hack ;-;
+        {
+            state = 0;
+        }
     }
+
 }
 
 void Game::camera()
@@ -275,6 +284,9 @@ void Game::playerMovement()
         Player::rec.x = 0;
     if(Player::rec.x > 1880.f)
         Player::rec.x = 1880.f;
+
+    if(lives < 0)
+        state = 0;
 }
 
 void Game::playerAnimation()
@@ -512,12 +524,13 @@ void Game::render()
                 switch(map[i][j])
                 {
                     case 0: break;
-                    case 166:
-                    case 167:
-                    case 168:
                     case 2:
                         DrawTexture(block[2], (j * 32) - offsetX, (i * 32) - offsetY, WHITE);
                         break;
+                    case 1:
+                    case 166:
+                    case 167:
+                    case 168:
                     case 6:
                         DrawTexture(block[0], (j * 32) - offsetX, (i * 32) - offsetY, WHITE);
                         break;
@@ -572,28 +585,74 @@ void Game::render()
     EndDrawing();
 }
 
+void Game::menu()
+{
+    //input
+    if(IsKeyDown(KEY_DOWN) && menu_cursor_pos.y == 420)
+    {
+        menu_cursor_pos.y = 530;
+        PlaySound(fx_pickup);
+    }
+    if(IsKeyDown(KEY_UP) && menu_cursor_pos.y == 530)
+    {
+        menu_cursor_pos.y = 420;
+        PlaySound(fx_pickup);
+    }
+    if(IsKeyDown(KEY_SPACE) && menu_cursor_pos.y == 420)
+    {
+        state = 1;
+    }
+
+    
+    //render
+    BeginDrawing();
+        ClearBackground(BLACK);
+        DrawTextureEx(bgLayer1, bgLayer1Pos, 0.0f, SCALE, WHITE);
+        DrawTextureEx(bgLayer2, bgLayer2Pos, 0.0f, SCALE, WHITE);
+        DrawTextureEx(bgLayer3, bgLayer3Pos, 0.0f, SCALE, WHITE);
+        DrawTextureEx(title, {(1280/2) - 50, 20}, 0.0f, SCALE, WHITE);
+        DrawTextureEx(kitty_ui, {(1280/2) - 130, 200}, 10.0f, 10.0f, WHITE);
+        DrawTextureEx(tx_menu, {500, 220}, 0.0f, SCALE, WHITE);
+        DrawTextureEx(fish_pickup, menu_cursor_pos, 0.0f, 3.0f, WHITE);
+    EndDrawing();
+}
+
+void Game::level0()
+{
+    //input
+    inputHandler();
+
+    //music
+    UpdateMusicStream(bg_music);
+
+    //logic
+    camera();
+    playerMovement();
+    collisionHandler();
+    playerAnimation();
+    enemyHandler();
+  
+    //debug
+    sprintf(debug, "x %d", lives);
+  
+    //render
+    render();
+}
+
 void Game::run()
 {
     while(!WindowShouldClose())
     {
-        //input
-        inputHandler();
+        switch(state)
+        {
+            case 0:
+                    menu();
+                    break;
+            case 1:
+                    level0();
+                    break;
+        }
 
-        //music
-        UpdateMusicStream(bg_music);
-
-        //logic
-        camera();
-        playerMovement();
-        collisionHandler();
-        playerAnimation();
-        enemyHandler();
-  
-        //debug
-        sprintf(debug, "x %d", lives);
-  
-        //render
-        render();
     }
 }
 
@@ -602,6 +661,8 @@ Game::~Game()
 {
     current_kitty = current_kitty_walk = current_kitty_attack = nullptr;
     current_enemy_orange = nullptr;
+    UnloadTexture(title);
+    UnloadTexture(tx_menu);
     UnloadTexture(bgLayer1);
     UnloadTexture(bgLayer2);
     UnloadTexture(bgLayer3);

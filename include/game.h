@@ -41,6 +41,10 @@ class Game
         char debug[250] = {0};
 
         int lives = 1;
+        int state = 0;
+
+        Texture2D title;
+        Texture2D tx_menu;
 
         Texture2D block[3];
         Texture2D lamp;
@@ -68,6 +72,7 @@ class Game
         Vector2 bgLayer3Pos {0, 0};
 
         Vector2 player_spawn_point {0,0};
+        Vector2 menu_cursor_pos {620, 420};
 
         Sound fx_hurt;
         Sound fx_pickup;
@@ -86,6 +91,9 @@ class Game
         void enemyCollisionHandler(int index);
         void enemyAnimation(int index);
         void render();
+
+        void menu();
+        void level0();
 
 };
 
