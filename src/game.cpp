@@ -234,6 +234,10 @@ void Game::collisionHandler()
 
     for(int i=0;i<num_of_pickups;i++)
     {
+        if(Collision::AABB(Player::rec, Pickup::rect[i]) && Pickup::is_active[i] && i == 3)
+        {
+            state = 0; // hack  ;-; 
+        }
         if(Collision::AABB(Player::rec, Pickup::rect[i]) && Pickup::is_active[i])
         {
             PlaySound(fx_pickup);
@@ -243,10 +247,7 @@ void Game::collisionHandler()
         {
             Pickup::is_active[i] = false;
         }
-        if(i == 3) // hack ;-;
-        {
-            state = 0;
-        }
+
     }
 
 }
@@ -601,6 +602,10 @@ void Game::menu()
     if(IsKeyDown(KEY_SPACE) && menu_cursor_pos.y == 420)
     {
         state = 1;
+    }
+    if(IsKeyDown(KEY_SPACE) && menu_cursor_pos.y == 530)
+    {
+        exit(1); //hack ;-; , out of time
     }
 
     

@@ -25,7 +25,7 @@ class Game
     private:
         const int WIDTH = 1280;
         const int HEIGHT = 720;
-        const std::string TITLE = "PRJ DESERTED";
+        const std::string TITLE = "Abandoned";
         const int FPS = 60;
         const float SCALE = 4.1f;
         int offsetX = 0;
