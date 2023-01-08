@@ -26,7 +26,17 @@ Game::Game()
     kitty[2] = LoadTexture("../assets/gfx/kitty/idle_1/kitty_idle3.png");
     kitty[3] = LoadTexture("../assets/gfx/kitty/idle_1/kitty_idle4.png");
 
+    kitty_walk[0] = LoadTexture("../assets/gfx/kitty/walk/kitty_walk1.png");
+    kitty_walk[1] = LoadTexture("../assets/gfx/kitty/walk/kitty_walk2.png");
+    kitty_walk[2] = LoadTexture("../assets/gfx/kitty/walk/kitty_walk3.png");
+    kitty_walk[3] = LoadTexture("../assets/gfx/kitty/walk/kitty_walk4.png");
+    kitty_walk[4] = LoadTexture("../assets/gfx/kitty/walk/kitty_walk5.png");
+    kitty_walk[5] = LoadTexture("../assets/gfx/kitty/walk/kitty_walk6.png");
+    kitty_walk[6] = LoadTexture("../assets/gfx/kitty/walk/kitty_walk7.png");
+    kitty_walk[7] = LoadTexture("../assets/gfx/kitty/walk/kitty_walk8.png");
+
     current_kitty = &kitty[0];
+    current_kitty_walk = &kitty_walk[0];
 
     Player::left = Player::right = Player::top = Player::bottom = false;
 
@@ -58,6 +68,7 @@ void Game::loadLevel(const std::string fileName)
 
 void Game::inputHandler()
 {
+    Player::is_running = false;
     if(IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) 
     {
         Player::rec.x += 1.0f * Player::speed * GetFrameTime();
@@ -67,6 +78,7 @@ void Game::inputHandler()
             bgLayer2Pos.x -= 5.0f * GetFrameTime();
             bgLayer3Pos.x -= 15.0f * GetFrameTime();
         }
+        Player::is_running = true;
     }
     if(IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) 
     {
@@ -77,6 +89,7 @@ void Game::inputHandler()
             bgLayer2Pos.x += 5.0f * GetFrameTime();
             bgLayer3Pos.x += 15.0f * GetFrameTime();
          }
+        Player::is_running = true;
     }
     if((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) && Player::on_floor) Player::is_jump = true;
 }
@@ -168,10 +181,11 @@ void Game::playerMovement()
 
 void Game::playerAnimation()
 {
-    Player::animation_tick += 1.0f * GetFrameTime();
-    if(Player::animation_tick > 0.2f)
+    Player::animation_idle_tick += 1.0f * GetFrameTime();
+    Player::animation_walk_tick += 1.0f * GetFrameTime();
+    if(Player::animation_idle_tick > 0.2f)
     {
-        Player::animation_tick = 0.f;
+        Player::animation_idle_tick = 0.f;
         if(current_kitty == &kitty[0])
         {
             current_kitty = &kitty[1];
@@ -190,6 +204,50 @@ void Game::playerAnimation()
         if(current_kitty == &kitty[3])
         {
             current_kitty = &kitty[0];
+            return;
+        }
+    }
+    if(Player::animation_walk_tick > 0.1f)
+    {
+        Player::animation_walk_tick = 0.f;
+        if(current_kitty_walk == &kitty_walk[0])
+        {
+            current_kitty_walk = &kitty_walk[1];
+            return;
+        }
+        if(current_kitty_walk == &kitty_walk[1])
+        {
+            current_kitty_walk = &kitty_walk[2];
+            return;
+        }
+        if(current_kitty_walk == &kitty_walk[2])
+        {
+            current_kitty_walk = &kitty_walk[3];
+            return;
+        }
+        if(current_kitty_walk == &kitty_walk[3])
+        {
+            current_kitty_walk = &kitty_walk[4];
+            return;
+        }
+        if(current_kitty_walk == &kitty_walk[4])
+        {
+            current_kitty_walk = &kitty_walk[5];
+            return;
+        }
+        if(current_kitty_walk == &kitty_walk[5])
+        {
+            current_kitty_walk = &kitty_walk[6];
+            return;
+        }
+        if(current_kitty_walk == &kitty_walk[6])
+        {
+            current_kitty_walk = &kitty_walk[0];
+            return;
+        }
+        if(current_kitty_walk == &kitty_walk[7])
+        {
+            current_kitty_walk = &kitty_walk[0];
             return;
         }
     }
@@ -233,8 +291,13 @@ void Game::render()
         // {
         //     DrawRectangle(collisionBoxes[i].x - offsetX, collisionBoxes[i].y - offsetY, collisionBoxes[i].width, collisionBoxes[i].height, GREEN);
         // }
-        DrawRectangle(Player::rec.x - offsetX, Player::rec.y - offsetY, 32, 32, RED);
-        DrawTextureEx(*current_kitty, {Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32}, 0.0f, 3.0f, WHITE);
+        //DrawRectangle(Player::rec.x - offsetX, Player::rec.y - offsetY, 32, 32, RED);
+        if(!Player::is_running)
+            DrawTextureEx(*current_kitty, {Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32}, 0.0f, 3.0f, WHITE);
+        else
+            DrawTextureEx(*current_kitty_walk, {Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32}, 0.0f, 3.0f, WHITE);
+
+        //DrawTexturePro(kitty_walk[0], (Rectangle){0, 0, -16, 16}, (Rectangle){0, 0, 16 * 3, 16 * 3}, {0,0}, 0.f, WHITE);
 
         DrawText(debug, 10, HEIGHT/2, 20, RAYWHITE);
     EndDrawing();
@@ -254,7 +317,7 @@ void Game::run()
         playerAnimation();
   
         //debug
-        sprintf(debug, "x = %f, y = %f; x = %f, y = %f, time = %f", Player::rec.x, Player::rec.y, Cam::offset.x, Cam::offset.y, Player::animation_tick);
+        sprintf(debug, "x = %f, y = %f; x = %f, y = %f, time = %f", Player::rec.x, Player::rec.y, Cam::offset.x, Cam::offset.y, Player::animation_walk_tick);
   
         //render
         render();
@@ -274,6 +337,10 @@ Game::~Game()
     for(int i=0;i<4;i++)
     {
         UnloadTexture(kitty[i]);
+    }
+    for(int i=0;i<8;i++)
+    {
+        UnloadTexture(kitty_walk[i]);
     }
     CloseWindow();
 }

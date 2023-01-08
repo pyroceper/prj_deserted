@@ -16,11 +16,12 @@ namespace Player
     extern float speed;
     extern bool on_floor;
     extern bool is_jump;
+    extern bool is_running;
     extern bool left, right, top, bottom;
     extern Collision::Side collision_side;
     extern float collision_array[4];
-    extern float animation_tick;
-    enum State { IDLE, JUMP, RUN};
-    extern State state;
+    extern float animation_idle_tick;
+    extern float animation_walk_tick;
+
 };
 #endif

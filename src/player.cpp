@@ -13,9 +13,10 @@ namespace Player
     float speed = 150.0f;
     bool on_floor = false; // change this!
     bool is_jump = false;
+    bool is_running = false;
     bool left, right, top, bottom;
     Collision::Side collision_side = Collision::Side::NONE;
     float collision_array[4] = {0.f};
-    float animation_tick = 0.0f;
-    State state = State::IDLE; 
+    float animation_idle_tick = 0.0f;
+    float animation_walk_tick = 0.0f;
 };

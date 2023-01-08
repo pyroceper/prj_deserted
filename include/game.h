@@ -43,8 +43,10 @@ class Game
         Texture2D bgLayer3;
 
         Texture2D kitty[5];
+        Texture2D kitty_walk[8];
 
         Texture2D *current_kitty = nullptr;
+        Texture2D *current_kitty_walk = nullptr;
 
         Vector2 bgLayer1Pos {0, 0};
         Vector2 bgLayer2Pos {0, 0};
