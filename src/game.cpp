@@ -94,6 +94,8 @@ void Game::loadLevel(const std::string fileName)
         }
     }
     fscanf(level, "%f %f", &Player::rec.x, &Player::rec.y);
+    player_spawn_point.x = Player::rec.x;
+    player_spawn_point.y = Player::rec.y;
     fscanf(level, "%d", &numOfCollisionBoxes);
     for(int i=0;i<numOfCollisionBoxes;i++)
     {
@@ -409,10 +411,21 @@ void Game::enemyCollisionHandler(int index)
     }
     if(Enemy::is_active[index] && Collision::AABB(Player::rec, Enemy::rect[index]) && Player::is_attack)
     {
-        Enemy::is_active[index] = false;
-        Enemy::is_dead[index] = true;
+        Player::collision_side = Collision::getCollisionSide(Player::rec, Enemy::rect[index]);
+        if(Player::collision_side == Collision::Side::RIGHT || Player::collision_side == Collision::Side::LEFT)
+        {
+            Enemy::is_active[index] = false;
+            Enemy::is_dead[index] = true;
+            PlaySound(fx_hurt);
+        }
+    }
+    else if(Enemy::is_active[index] && Collision::AABB(Player::rec, Enemy::rect[index]) && !Player::is_attack)
+    {
+        Player::rec.x = player_spawn_point.x;
+        Player::rec.y = player_spawn_point.y;
         PlaySound(fx_hurt);
     }
+    
 }
 
 void Game::enemyHandler()
@@ -545,11 +558,11 @@ void Game::render()
                 DrawTexturePro(enemy_orange_hurt, (Rectangle){0, 0, 32 * Enemy::is_left[i], 32}, (Rectangle){Enemy::rect[i].x - offsetX, Enemy::rect[i].y - offsetY - 32, 64, 64}, {0,0}, 0.f, WHITE);
  
         }
-        DrawRectangle(FlipBox::rect[0].x - offsetX, FlipBox::rect[0].y - offsetY, 32, 32, ORANGE);
-        DrawRectangle(FlipBox::rect[1].x - offsetX, FlipBox::rect[1].y - offsetY, 32, 32, ORANGE);
-        DrawRectangle(FlipBox::rect[2].x - offsetX, FlipBox::rect[2].y - offsetY, 32, 32, ORANGE);
-
-        DrawText(debug, 10, HEIGHT/2, 20, RAYWHITE);
+        //debug
+        // DrawRectangle(FlipBox::rect[0].x - offsetX, FlipBox::rect[0].y - offsetY, 32, 32, ORANGE);
+        // DrawRectangle(FlipBox::rect[1].x - offsetX, FlipBox::rect[1].y - offsetY, 32, 32, ORANGE);
+        // DrawRectangle(FlipBox::rect[2].x - offsetX, FlipBox::rect[2].y - offsetY, 32, 32, ORANGE);
+        //DrawText(debug, 10, HEIGHT/2, 20, RAYWHITE);
     EndDrawing();
 }
 

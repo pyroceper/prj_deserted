@@ -64,6 +64,8 @@ class Game
         Vector2 bgLayer2Pos {0, 0};
         Vector2 bgLayer3Pos {0, 0};
 
+        Vector2 player_spawn_point {0,0};
+
         Sound fx_hurt;
         Sound fx_pickup;
         Sound fx_jump;
