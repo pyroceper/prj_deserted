@@ -89,7 +89,6 @@ void Game::loadLevel(const std::string fileName)
     int numOfEnemies;
     int n;
 
-    lives = 1;
     for(int i=0;i<ROWS;i++)
     {
         for(int j=0;j<COLS;j++)
@@ -601,6 +600,8 @@ void Game::menu()
     }
     if(IsKeyDown(KEY_SPACE) && menu_cursor_pos.y == 420)
     {
+        lives = 1;
+        loadLevel("../assets/levels/level0.txt");
         state = 1;
     }
     if(IsKeyDown(KEY_SPACE) && menu_cursor_pos.y == 530)
