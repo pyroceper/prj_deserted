@@ -40,12 +40,15 @@ class Game
 
         char debug[250] = {0};
 
+        int lives = 1;
+
         Texture2D block[3];
         Texture2D lamp;
         Texture2D bgLayer1;
         Texture2D bgLayer2;
         Texture2D bgLayer3;
 
+        Texture2D kitty_ui;
         Texture2D kitty[5];
         Texture2D kitty_walk[8];
         Texture2D kitty_attack[7];

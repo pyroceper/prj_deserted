@@ -46,6 +46,8 @@ Game::Game()
     kitty_attack[4] = LoadTexture("../assets/gfx/kitty/attack/kitty_attack5.png");
     kitty_attack[5] = LoadTexture("../assets/gfx/kitty/attack/kitty_attack6.png");
 
+    kitty_ui = LoadTexture("../assets/gfx/kitty/kitty_face.png");
+
     enemy_orange[0] = LoadTexture("../assets/gfx/enemies/orange/orange1.png");
     enemy_orange[1] = LoadTexture("../assets/gfx/enemies/orange/orange2.png");
     enemy_orange[2] = LoadTexture("../assets/gfx/enemies/orange/orange3.png");
@@ -231,6 +233,7 @@ void Game::collisionHandler()
         if(Collision::AABB(Player::rec, Pickup::rect[i]) && Pickup::is_active[i])
         {
             PlaySound(fx_pickup);
+            lives++;
         }
         if(Collision::AABB(Player::rec, Pickup::rect[i]))
         {
@@ -424,6 +427,7 @@ void Game::enemyCollisionHandler(int index)
         Player::rec.x = player_spawn_point.x;
         Player::rec.y = player_spawn_point.y;
         PlaySound(fx_hurt);
+        lives--;
     }
     
 }
@@ -558,11 +562,13 @@ void Game::render()
                 DrawTexturePro(enemy_orange_hurt, (Rectangle){0, 0, 32 * Enemy::is_left[i], 32}, (Rectangle){Enemy::rect[i].x - offsetX, Enemy::rect[i].y - offsetY - 32, 64, 64}, {0,0}, 0.f, WHITE);
  
         }
+        DrawTextureEx(kitty_ui, {0.f, 0.f}, 0.0f, 5.0f, WHITE);
+
         //debug
         // DrawRectangle(FlipBox::rect[0].x - offsetX, FlipBox::rect[0].y - offsetY, 32, 32, ORANGE);
         // DrawRectangle(FlipBox::rect[1].x - offsetX, FlipBox::rect[1].y - offsetY, 32, 32, ORANGE);
         // DrawRectangle(FlipBox::rect[2].x - offsetX, FlipBox::rect[2].y - offsetY, 32, 32, ORANGE);
-        //DrawText(debug, 10, HEIGHT/2, 20, RAYWHITE);
+        DrawText(debug, 72, 25, 40, GRAY);
     EndDrawing();
 }
 
@@ -584,7 +590,7 @@ void Game::run()
         enemyHandler();
   
         //debug
-        sprintf(debug, "x = %f, y = %f; x = %f, y = %f, time = %f", Player::rec.x, Player::rec.y, Cam::offset.x, Cam::offset.y, Player::animation_attack_tick);
+        sprintf(debug, "x %d", lives);
   
         //render
         render();
@@ -603,6 +609,7 @@ Game::~Game()
     UnloadTexture(block[1]);
     UnloadTexture(block[2]);
     UnloadTexture(lamp);
+    UnloadTexture(kitty_ui);
     for(int i=0;i<4;i++)
     {
         UnloadTexture(kitty[i]);
