@@ -89,7 +89,7 @@ void Game::loadLevel(const std::string fileName)
     int numOfEnemies;
     int n;
 
-
+    lives = 1;
     for(int i=0;i<ROWS;i++)
     {
         for(int j=0;j<COLS;j++)
