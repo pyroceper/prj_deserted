@@ -33,6 +33,8 @@ class Game
         int map[ROWS][COLS] = {0};
 
         std::vector<Rectangle> collisionBoxes;
+        int num_of_active_enemies = 0;
+        int num_of_flip_boxes = 0;
 
         char debug[250] = {0};
 
@@ -58,8 +60,9 @@ class Game
         void camera();
         void playerMovement();
         void playerAnimation();
-        void enemyThink();
-        void enemyCollisionHandler();
+        void enemyHandler();
+        void enemyThink(int index);
+        void enemyCollisionHandler(int index);
         void render();
 
 };

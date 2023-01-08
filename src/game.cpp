@@ -78,6 +78,7 @@ void Game::loadLevel(const std::string fileName)
         Enemy::is_left[i] = -1;
         if(n == 1)
             Enemy::type[i] = Enemy::Type::PATROL;
+        num_of_active_enemies++;
     }
     fscanf(level, "%d", &n);
     for(int i=0;i<n;i++)
@@ -85,6 +86,7 @@ void Game::loadLevel(const std::string fileName)
         fscanf(level, "%f %f", &x, &y);
         FlipBox::rect[i].x = x;
         FlipBox::rect[i].y = y;
+        num_of_flip_boxes++;
     }
 
     fclose(level);
@@ -280,28 +282,37 @@ void Game::playerAnimation()
 
 }
 
-void Game::enemyThink()
+void Game::enemyThink(int index)
 {
-    if(Enemy::type[0] == Enemy::Type::PATROL)
+    if(Enemy::type[index] == Enemy::Type::PATROL)
     {
-        if(Enemy::is_left[0] == -1)
-            Enemy::rect[0].x -= 20.0f * GetFrameTime();
+        if(Enemy::is_left[index] == -1)
+            Enemy::rect[index].x -= 20.0f * GetFrameTime();
         else 
-            Enemy::rect[0].x += 20.0f * GetFrameTime();
+            Enemy::rect[index].x += 20.0f * GetFrameTime();
     }
 }
 
-void Game::enemyCollisionHandler()
+void Game::enemyCollisionHandler(int index)
 {
-    for(int i=0;i<2;i++)
+    for(int i=0;i<num_of_flip_boxes;i++)
     {
-        if(Collision::AABB(Enemy::rect[0], FlipBox::rect[i]))
+        if(Collision::AABB(Enemy::rect[index], FlipBox::rect[i]))
         {
-            if(Enemy::is_left[0] == 1)
-                Enemy::is_left[0] = -1;
+            if(Enemy::is_left[index] == 1)
+                Enemy::is_left[index] = -1;
             else 
-                Enemy::is_left[0] = 1;
+                Enemy::is_left[index] = 1;
         }
+    }
+}
+
+void Game::enemyHandler()
+{
+    for(int i=0;i<num_of_active_enemies;i++)
+    {
+        enemyThink(i);
+        enemyCollisionHandler(i);
     }
 }
 
@@ -349,10 +360,13 @@ void Game::render()
         else 
             DrawTexturePro(*current_kitty_walk, (Rectangle){0, 0, 16 * Player::is_left, 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0,0}, 0.f, WHITE);
 
-        DrawRectangle(Enemy::rect[0].x - offsetX, Enemy::rect[0].y - offsetY, 32, 32, RED);
+        for(int i=0;i<num_of_active_enemies;i++)
+        {
+            DrawRectangle(Enemy::rect[i].x - offsetX, Enemy::rect[i].y - offsetY, 32, 32, RED);
+        }
         DrawRectangle(FlipBox::rect[0].x - offsetX, FlipBox::rect[0].y - offsetY, 32, 32, ORANGE);
         DrawRectangle(FlipBox::rect[1].x - offsetX, FlipBox::rect[1].y - offsetY, 32, 32, ORANGE);
-
+        DrawRectangle(FlipBox::rect[2].x - offsetX, FlipBox::rect[2].y - offsetY, 32, 32, ORANGE);
 
         DrawText(debug, 10, HEIGHT/2, 20, RAYWHITE);
     EndDrawing();
@@ -370,8 +384,7 @@ void Game::run()
         playerMovement();
         collisionHandler();
         playerAnimation();
-        enemyThink();
-        enemyCollisionHandler();
+        enemyHandler();
   
         //debug
         sprintf(debug, "x = %f, y = %f; x = %f, y = %f, time = %f", Player::rec.x, Player::rec.y, Cam::offset.x, Cam::offset.y, Player::animation_walk_tick);
