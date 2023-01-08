@@ -44,112 +44,133 @@ void Game::loadLevel(const std::string fileName)
     }
 }
 
+void Game::inputHandler()
+{
+    if(IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) Player::rec.x += 1.0f * Player::speed * GetFrameTime();
+    if(IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))  Player::rec.x -= 1.0f * Player::speed * GetFrameTime();
+    if((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) && Player::on_floor) Player::is_jump = true;
+}
+
+void Game::collisionHandler()
+{
+    for(int i=0;i<collisionBoxes.size();i++)
+    {
+        if(Collision::AABB(Player::rec, collisionBoxes[i]))
+        {
+            Player::collision_side = Collision::getCollisionSide(Player::rec, collisionBoxes[i]);
+            if(Player::collision_side == Collision::Side::BOTTOM)
+            {
+                Player::bottom = true;
+                Player::collision_array[0] = Collision::getBottom(Player::rec) - Collision::getTop(collisionBoxes[i]);
+            }
+            if(Player::collision_side == Collision::Side::RIGHT)
+            {
+                Player::right = true;
+                Player::collision_array[1] = Collision::getRight(Player::rec) - Collision::getLeft(collisionBoxes[i]);
+            }
+            if(Player::collision_side == Collision::Side::LEFT)
+            {
+                Player::left = true;
+                Player::collision_array[2] = Collision::getRight(collisionBoxes[i]) - Collision::getLeft(Player::rec);
+            }
+            if(Player::collision_side == Collision::Side::TOP)
+            {
+                Player::top = true;
+                Player::collision_array[3] = Collision::getBottom(collisionBoxes[i]) - Collision::getTop(Player::rec);
+            }
+        }                          
+    }
+        
+    if(!Player::bottom)
+    {
+        Player::on_floor = false;
+    }
+    if(Player::bottom)
+    {
+        Player::rec.y -= Player::collision_array[0];
+        Player::on_floor = true;
+        Player::jump_height = Player::JUMP_HEIGHT;
+        Player::is_jump = false;
+        Player::fall_speed = 0.0f;
+        Player::bottom = false;
+    }
+    if(Player::left)
+    {
+        Player::rec.x += Player::collision_array[2];
+        Player::left = false;
+    }
+}
+
+void Game::camera()
+{
+    Cam::followTarget((int)Player::rec.x, (int)Player::rec.y, 740, 740);
+    offsetX = static_cast<int>(Cam::offset.x);
+    offsetY = static_cast<int>(Cam::offset.y);
+}
+
+void Game::playerMovement()
+{
+    if(Player::is_jump)
+    {
+        Player::rec.y -= 1.0f * Player::jump_height * GetFrameTime();
+        Player::jump_height -= 10.0f;
+    }
+
+    if(!Player::on_floor && Player::is_jump)
+    {
+        Player::rec.y += Player::GRAVITY * GetFrameTime();
+    }
+
+    if(!Player::on_floor && !Player::is_jump)
+    {
+        Player::rec.y += Player::fall_speed * Player::GRAVITY * GetFrameTime();
+        Player::fall_speed += 0.2f;
+    }
+}
+
+void Game::render()
+{
+    BeginDrawing();
+        ClearBackground(BLACK);
+        DrawTextureEx(bgLayer1, bgLayer1Pos, 0.0f, SCALE, WHITE);
+        DrawTextureEx(bgLayer2, bgLayer2Pos, 0.0f, SCALE, WHITE);
+        DrawTextureEx(bgLayer3, bgLayer3Pos, 0.0f, SCALE, WHITE);
+        for(int i=0;i<30;i++)
+        {
+            for(int j=0;j<30;j++)
+            {
+                if(map[i][j])
+                    DrawTexture(block, (j * 32) - offsetX, (i * 32) - offsetY, WHITE);
+            }
+        }
+        //debug
+        // for(int i=0;i<collisionBoxes.size();i++)
+        // {
+        //     DrawRectangle(collisionBoxes[i].x - offsetX, collisionBoxes[i].y - offsetY, collisionBoxes[i].width, collisionBoxes[i].height, GREEN);
+        // }
+        DrawRectangle(Player::rec.x - offsetX, Player::rec.y - offsetY, 32, 32, RED);
+
+        DrawText(debug, WIDTH/2, HEIGHT/2, 20, RAYWHITE);
+    EndDrawing();
+}
 
 void Game::run()
 {
     while(!WindowShouldClose())
     {
         //input
-        if(IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) Player::rec.x += 1.0f * Player::speed * GetFrameTime();
-        if(IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))  Player::rec.x -= 1.0f * Player::speed * GetFrameTime();
-        if((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) && Player::on_floor) Player::is_jump = true;
+        inputHandler();
 
         //logic
-        Cam::followTarget((int)Player::rec.x, (int)Player::rec.y, 740, 740);
-        offsetX = static_cast<int>(Cam::offset.x);
-        offsetY = static_cast<int>(Cam::offset.y);
-
-        if(Player::is_jump)
-        {
-            Player::rec.y -= 1.0f * Player::jump_height * GetFrameTime();
-            Player::jump_height -= 10.0f;
-        }
-
-        if(!Player::on_floor && Player::is_jump)
-        {
-            Player::rec.y += Player::GRAVITY * GetFrameTime();
-        }
-
-        if(!Player::on_floor && !Player::is_jump)
-        {
-            Player::rec.y += Player::fall_speed * Player::GRAVITY * GetFrameTime();
-            Player::fall_speed += 0.2f;
-        }
-
-
-        for(int i=0;i<collisionBoxes.size();i++)
-        {
-            if(Collision::AABB(Player::rec, collisionBoxes[i]))
-            {
-                Player::collision_side = Collision::getCollisionSide(Player::rec, collisionBoxes[i]);
-                if(Player::collision_side == Collision::Side::BOTTOM)
-                {
-                    Player::bottom = true;
-                    Player::collision_array[0] = Collision::getBottom(Player::rec) - Collision::getTop(collisionBoxes[i]);
-                }
-                if(Player::collision_side == Collision::Side::RIGHT)
-                {
-                    Player::right = true;
-                    Player::collision_array[1] = Collision::getRight(Player::rec) - Collision::getLeft(collisionBoxes[i]);
-                }
-                if(Player::collision_side == Collision::Side::LEFT)
-                {
-                    Player::left = true;
-                    Player::collision_array[2] = Collision::getRight(collisionBoxes[i]) - Collision::getLeft(Player::rec);
-                }
-                if(Player::collision_side == Collision::Side::TOP)
-                {
-                    Player::top = true;
-                    Player::collision_array[3] = Collision::getBottom(collisionBoxes[i]) - Collision::getTop(Player::rec);
-                }
-            }                          
-        }
-        
-        if(!Player::bottom)
-        {
-            Player::on_floor = false;
-        }
-        if(Player::bottom)
-        {
-            Player::rec.y -= Player::collision_array[0];
-            Player::on_floor = true;
-            Player::jump_height = Player::JUMP_HEIGHT;
-            Player::is_jump = false;
-            Player::fall_speed = 0.0f;
-            Player::bottom = false;
-        }
-        if(Player::left)
-        {
-            Player::rec.x += Player::collision_array[2];
-            Player::left = false;
-        }
-
-
+        camera();
+        playerMovement();
+        collisionHandler();
+  
         //debug
         sprintf(debug, "diff = %f", Player::collision_array[0]);
   
         //render
-        BeginDrawing();
-            ClearBackground(BLACK);
-            DrawTextureEx(bgLayer1, bgLayer1Pos, 0.0f, SCALE, WHITE);
-            DrawTextureEx(bgLayer2, bgLayer2Pos, 0.0f, SCALE, WHITE);
-            DrawTextureEx(bgLayer3, bgLayer3Pos, 0.0f, SCALE, WHITE);
-            for(int i=0;i<30;i++)
-            {
-                for(int j=0;j<30;j++)
-                {
-                    if(map[i][j])
-                        DrawTexture(block, (j * 32) - offsetX, (i * 32) - offsetY, WHITE);
-                }
-            }
-            //debug
-            // for(int i=0;i<collisionBoxes.size();i++)
-            // {
-            //     DrawRectangle(collisionBoxes[i].x - offsetX, collisionBoxes[i].y - offsetY, collisionBoxes[i].width, collisionBoxes[i].height, GREEN);
-            // }
-            DrawRectangle(Player::rec.x - offsetX, Player::rec.y - offsetY, 32, 32, RED);
-            DrawText(debug, WIDTH/2, HEIGHT/2, 20, RAYWHITE);
-        EndDrawing();
+        render();
     }
 }
 

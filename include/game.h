@@ -44,6 +44,11 @@ class Game
         Vector2 bgLayer3Pos {0, 0};
 
         void loadLevel(const std::string fileName);
+        void inputHandler();
+        void collisionHandler();
+        void camera();
+        void playerMovement();
+        void render();
 
 };
 
