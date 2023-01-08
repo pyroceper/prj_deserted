@@ -8,6 +8,8 @@
 #include "raylib.h"
 #include "collision.h"
 #include "player.h"
+#include "enemy.h"
+#include "flip_box.h"
 #include "camera.h"
 
 const int ROWS = 60;
@@ -34,8 +36,6 @@ class Game
 
         char debug[250] = {0};
 
-        Rectangle testGround;
-
         Texture2D block[3];
         Texture2D lamp;
         Texture2D bgLayer1;
@@ -58,6 +58,8 @@ class Game
         void camera();
         void playerMovement();
         void playerAnimation();
+        void enemyThink();
+        void enemyCollisionHandler();
         void render();
 
 };
