@@ -94,6 +94,7 @@ class Game
 
         void menu();
         void level0();
+        void clean();
 
 };
 

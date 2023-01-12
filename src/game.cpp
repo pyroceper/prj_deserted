@@ -606,7 +606,8 @@ void Game::menu()
     }
     if(IsKeyDown(KEY_SPACE) && menu_cursor_pos.y == 530)
     {
-        exit(1); //hack ;-; , out of time
+        clean();
+        exit(0);
     }
 
     
@@ -662,8 +663,7 @@ void Game::run()
     }
 }
 
-
-Game::~Game()
+void Game::clean()
 {
     current_kitty = current_kitty_walk = current_kitty_attack = nullptr;
     current_enemy_orange = nullptr;
@@ -697,5 +697,11 @@ Game::~Game()
     UnloadMusicStream(bg_music);
     CloseAudioDevice();
     CloseWindow();
+}
+
+
+Game::~Game()
+{
+    clean();
 }
 
