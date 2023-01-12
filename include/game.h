@@ -6,6 +6,9 @@
 #include <cstdio>
 #include <vector>
 #include "raylib.h"
+#if defined(PLATFORM_WEB)
+    #include <emscripten/emscripten.h>
+#endif
 #include "collision.h"
 #include "player.h"
 #include "enemy.h"
@@ -21,6 +24,9 @@ class Game
     public:
         Game();
         void run();
+        #if defined(PLATFORM_WEB)
+            friend void webRun(Game &game);
+        #endif
         ~Game();
     private:
         const int WIDTH = 1280;
@@ -106,6 +112,10 @@ class Game
         void clean();
 
 };
+
+#if defined(PLATFORM_WEB)
+    void webRun(Game &game);
+#endif
 
 
 #endif

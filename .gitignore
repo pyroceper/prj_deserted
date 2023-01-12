@@ -30,6 +30,14 @@
 *.exe
 *.out
 *.app
+*.bat
 
 # vscode
 .vscode/*
+
+# web
+*.html
+*.js
+*.wasm
+*.data
+
