@@ -78,7 +78,7 @@ Game::Game()
 
     Player::left = Player::right = Player::top = Player::bottom = false;
 
-    loadLevel("../assets/levels/level0.txt");
+    //loadLevel("../assets/levels/level1.txt");
 }
 
 void Game::loadLevel(const std::string fileName)
@@ -88,54 +88,79 @@ void Game::loadLevel(const std::string fileName)
     int numOfCollisionBoxes;
     int numOfEnemies;
     int n;
+    int r, c;
 
-    for(int i=0;i<ROWS;i++)
+    fscanf(level, "%d %d", &c, &r);
+    rows = r;
+    cols = c;
+    printf("[debug] rows = %d, cols = %d\n", rows, cols);
+
+    for(int i=0;i<rows;i++)
     {
-        for(int j=0;j<COLS;j++)
+        for(int j=0;j<cols;j++)
         {
             fscanf(level, "%d", &map[i][j]);
         }
     }
+    printf("[debug] loading level done!\n");
     fscanf(level, "%f %f", &Player::rec.x, &Player::rec.y);
     player_spawn_point.x = Player::rec.x;
     player_spawn_point.y = Player::rec.y;
+    //for debug player 
+    player_debug.x = player_spawn_point.x;
+    player_debug.y = player_spawn_point.y;
     fscanf(level, "%d", &numOfCollisionBoxes);
     for(int i=0;i<numOfCollisionBoxes;i++)
     {
         fscanf(level, "%f %f %f %f", &x, &y, &w, &h);
         collisionBoxes.push_back({x, y, w, h});
     }
-    fscanf(level, "%d", &numOfEnemies);
-    for(int i=0;i<numOfEnemies;i++)
-    {
-        fscanf(level, "%f %f %d", &x, &y, &n);
-        Enemy::rect[i].x = x;
-        Enemy::rect[i].y = y;
-        Enemy::is_active[i] = true;
-        Enemy::is_left[i] = -1;
-        if(n == 1)
-            Enemy::type[i] = Enemy::Type::PATROL;
-        num_of_active_enemies++;
-    }
-    fscanf(level, "%d", &n);
-    for(int i=0;i<n;i++)
-    {
-        fscanf(level, "%f %f", &x, &y);
-        FlipBox::rect[i].x = x;
-        FlipBox::rect[i].y = y;
-        num_of_flip_boxes++;
-    }
-    fscanf(level, "%d", &n);
-    for(int i=0;i<n;i++)
-    {
-        fscanf(level, "%f %f", &x, &y);
-        Pickup::rect[i].x = x;
-        Pickup::rect[i].y = y;
-        Pickup::rect[i].width = Pickup::rect[i].height = 32;
-        Pickup::is_active[i] = true;
-        num_of_pickups++;
-    }
+    // fscanf(level, "%d", &numOfEnemies);
+    // for(int i=0;i<numOfEnemies;i++)
+    // {
+    //     fscanf(level, "%f %f %d", &x, &y, &n);
+    //     Enemy::rect[i].x = x;
+    //     Enemy::rect[i].y = y;
+    //     Enemy::is_active[i] = true;
+    //     Enemy::is_left[i] = -1;
+    //     if(n == 1)
+    //         Enemy::type[i] = Enemy::Type::PATROL;
+    //     num_of_active_enemies++;
+    // }
+    // fscanf(level, "%d", &n);
+    // for(int i=0;i<n;i++)
+    // {
+    //     fscanf(level, "%f %f", &x, &y);
+    //     FlipBox::rect[i].x = x;
+    //     FlipBox::rect[i].y = y;
+    //     num_of_flip_boxes++;
+    // }
+    // fscanf(level, "%d", &n);
+    // for(int i=0;i<n;i++)
+    // {
+    //     fscanf(level, "%f %f", &x, &y);
+    //     Pickup::rect[i].x = x;
+    //     Pickup::rect[i].y = y;
+    //     Pickup::rect[i].width = Pickup::rect[i].height = 32;
+    //     Pickup::is_active[i] = true;
+    //     num_of_pickups++;
+    // }
 
+    fclose(level);
+}
+
+void Game::levelPrintDebug()
+{
+    FILE *level = fopen("../assets/levels/debug.txt", "w");
+    fprintf(level, "%d %d\n", rows, cols);
+    for(int i=0;i<rows;i++)
+    {
+        for(int j=0;j<cols;j++)
+        {
+            fprintf(level, "%d ", map[i][j]);
+        }
+        fprintf(level, "\n");
+    }    
     fclose(level);
 }
 
@@ -145,24 +170,24 @@ void Game::inputHandler()
     if(IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) 
     {
         Player::rec.x += 1.0f * Player::speed * GetFrameTime();
-        if(!Player::right && offsetX != 0 && offsetX < 640)
-        {
-            bgLayer1Pos.x -= 2.0f * GetFrameTime();
-            bgLayer2Pos.x -= 5.0f * GetFrameTime();
-            bgLayer3Pos.x -= 15.0f * GetFrameTime();
-        }
+        // if(!Player::right && offsetX != 0 && offsetX < 640)
+        // {
+        //     bgLayer1Pos.x -= 2.0f * GetFrameTime();
+        //     bgLayer2Pos.x -= 5.0f * GetFrameTime();
+        //     bgLayer3Pos.x -= 15.0f * GetFrameTime();
+        // }
         Player::is_running = true;
         Player::is_left = 1;
     }
     if(IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) 
     {
          Player::rec.x -= 1.0f * Player::speed * GetFrameTime();
-         if(!Player::left && offsetX != 0 && offsetX < 640)
-         {
-            bgLayer1Pos.x += 2.0f * GetFrameTime();
-            bgLayer2Pos.x += 5.0f * GetFrameTime();
-            bgLayer3Pos.x += 15.0f * GetFrameTime();
-         }
+        //  if(!Player::left && offsetX != 0 && offsetX < 640)
+        //  {
+        //     bgLayer1Pos.x += 2.0f * GetFrameTime();
+        //     bgLayer2Pos.x += 5.0f * GetFrameTime();
+        //     bgLayer3Pos.x += 15.0f * GetFrameTime();
+        //  }
         Player::is_running = true;
         Player::is_left = -1;
     }
@@ -173,6 +198,18 @@ void Game::inputHandler()
     }
     if(IsKeyDown(KEY_SPACE))
         Player::is_attack = true;
+}
+
+void Game::inputDebug()
+{
+    if(IsKeyDown(KEY_LEFT))
+        player_debug.x -= 1.0f * Player::speed * GetFrameTime();
+    if(IsKeyDown(KEY_RIGHT))
+        player_debug.x += 1.0f * Player::speed * GetFrameTime();
+    if(IsKeyDown(KEY_DOWN))
+        player_debug.y += 1.0f * Player::speed * GetFrameTime();
+    if(IsKeyDown(KEY_UP))
+        player_debug.y -= 1.0f * Player::speed * GetFrameTime();
 }
 
 void Game::collisionHandler()
@@ -256,9 +293,17 @@ void Game::camera()
     Cam::followTarget(Player::rec.x, Player::rec.y, 740, 740);
     offsetX = static_cast<int>(Cam::offset.x);
     offsetY = static_cast<int>(Cam::offset.y);
-    offsetY -= 250;
-    if(offsetX > 640)
-        offsetX = 640;
+    offsetY -= 270;
+    // if(offsetX > 640)
+    //     offsetX = 640;
+}
+
+void Game::cameraDebug()
+{
+    Cam::followTarget(player_debug.x, player_debug.y, 740, 740);
+    offsetX = static_cast<int>(Cam::offset.x);
+    offsetY = static_cast<int>(Cam::offset.y);
+    offsetY -= 270;
 }
 
 void Game::playerMovement()
@@ -517,9 +562,9 @@ void Game::render()
         DrawTextureEx(bgLayer1, bgLayer1Pos, 0.0f, SCALE, WHITE);
         DrawTextureEx(bgLayer2, bgLayer2Pos, 0.0f, SCALE, WHITE);
         DrawTextureEx(bgLayer3, bgLayer3Pos, 0.0f, SCALE, WHITE);
-        for(int i=0;i<ROWS;i++)
+        for(int i=0;i<rows;i++)
         {
-            for(int j=0;j<COLS;j++)
+            for(int j=0;j<cols;j++)
             {
                 switch(map[i][j])
                 {
@@ -601,7 +646,8 @@ void Game::menu()
     if(IsKeyDown(KEY_SPACE) && menu_cursor_pos.y == 420)
     {
         lives = 1;
-        loadLevel("../assets/levels/level0.txt");
+        loadLevel("../assets/levels/level1.txt");
+        levelPrintDebug();
         state = 1;
     }
     if(IsKeyDown(KEY_SPACE) && menu_cursor_pos.y == 530)
@@ -624,26 +670,53 @@ void Game::menu()
     EndDrawing();
 }
 
+void Game::renderTest()
+{
+        BeginDrawing();
+            ClearBackground(RAYWHITE);
+            for(int y=0;y<rows;y++)
+            {
+                for(int x=0;x<cols;x++)
+                {
+                    if(map[y][x] == 2)
+                        //DrawRectangle(x * 32, y * 32, 32, 32, YELLOW);
+                        DrawTexture(block[2], (x * 32) - offsetX, (y * 32) - offsetY, WHITE);
+                    if(map[y][x] == 17)
+                        DrawTexture(block[1], (x * 32) - offsetX, (y * 32) - offsetY, WHITE);
+                }
+            }
+            DrawRectangle(player_debug.x - offsetX, player_debug.y - offsetY, 32, 32, RED);
+            //DrawText("working", 0, 0, 20, YELLOW);
+            for(int i=0;i<collisionBoxes.size();i++)
+            {
+                DrawRectangle(collisionBoxes[i].x - offsetX, collisionBoxes[i].y - offsetY, collisionBoxes[i].width, collisionBoxes[i].height, GREEN);
+            }
+        EndDrawing();
+}
+
 void Game::level0()
 {
     //input
     inputHandler();
+    //inputDebug();
 
     //music
-    UpdateMusicStream(bg_music);
+    //UpdateMusicStream(bg_music);
 
     //logic
     camera();
+    //cameraDebug();
     playerMovement();
     collisionHandler();
     playerAnimation();
-    enemyHandler();
+    //enemyHandler();
   
     //debug
-    sprintf(debug, "x %d", lives);
+    //sprintf(debug, "x %d", lives);
   
     //render
     render();
+    //renderTest();
 }
 
 void Game::run()

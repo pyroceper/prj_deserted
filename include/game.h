@@ -13,8 +13,8 @@
 #include "camera.h"
 #include "pickup.h"
 
-const int ROWS = 60;
-const int COLS = 60;
+const int ROWS = 120;
+const int COLS = 120;
 
 class Game
 {
@@ -32,6 +32,8 @@ class Game
         int offsetY = 0;
 
         int map[ROWS][COLS] = {0};
+        int rows = 0;
+        int cols = 0;
 
         std::vector<Rectangle> collisionBoxes;
         int num_of_active_enemies = 0;
@@ -91,6 +93,13 @@ class Game
         void enemyCollisionHandler(int index);
         void enemyAnimation(int index);
         void render();
+
+        //debug
+        Vector2 player_debug {0.f, 0.f};
+        void inputDebug();
+        void renderTest();
+        void cameraDebug();
+        void levelPrintDebug();
 
         void menu();
         void level0();
