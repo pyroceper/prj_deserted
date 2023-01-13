@@ -118,7 +118,6 @@ void Game::loadLevel(const std::string fileName)
             fscanf(level, "%d", &map[i][j]);
         }
     }
-    printf("[debug] loading level done!\n");
     fscanf(level, "%f %f", &Player::rec.x, &Player::rec.y);
     player_spawn_point.x = Player::rec.x;
     player_spawn_point.y = Player::rec.y;
@@ -131,26 +130,26 @@ void Game::loadLevel(const std::string fileName)
         fscanf(level, "%f %f %f %f", &x, &y, &w, &h);
         collisionBoxes.push_back({x, y, w, h});
     }
-    // fscanf(level, "%d", &numOfEnemies);
-    // for(int i=0;i<numOfEnemies;i++)
-    // {
-    //     fscanf(level, "%f %f %d", &x, &y, &n);
-    //     Enemy::rect[i].x = x;
-    //     Enemy::rect[i].y = y;
-    //     Enemy::is_active[i] = true;
-    //     Enemy::is_left[i] = -1;
-    //     if(n == 1)
-    //         Enemy::type[i] = Enemy::Type::PATROL;
-    //     num_of_active_enemies++;
-    // }
-    // fscanf(level, "%d", &n);
-    // for(int i=0;i<n;i++)
-    // {
-    //     fscanf(level, "%f %f", &x, &y);
-    //     FlipBox::rect[i].x = x;
-    //     FlipBox::rect[i].y = y;
-    //     num_of_flip_boxes++;
-    // }
+    fscanf(level, "%d", &numOfEnemies);
+    for(int i=0;i<numOfEnemies;i++)
+    {
+        fscanf(level, "%f %f %d", &x, &y, &n);
+        Enemy::rect[i].x = x;
+        Enemy::rect[i].y = y;
+        Enemy::is_active[i] = true;
+        Enemy::is_left[i] = -1;
+        if(n == 1)
+            Enemy::type[i] = Enemy::Type::PATROL;
+        num_of_active_enemies++;
+    }
+    fscanf(level, "%d", &n);
+    for(int i=0;i<n;i++)
+    {
+        fscanf(level, "%f %f", &x, &y);
+        FlipBox::rect[i].x = x;
+        FlipBox::rect[i].y = y;
+        num_of_flip_boxes++;
+    }
     // fscanf(level, "%d", &n);
     // for(int i=0;i<n;i++)
     // {
@@ -163,6 +162,7 @@ void Game::loadLevel(const std::string fileName)
     // }
 
     fclose(level);
+    printf("[debug] loading level done!\n");
 }
 
 void Game::levelPrintDebug()
@@ -727,7 +727,7 @@ void Game::level0()
     playerMovement();
     collisionHandler();
     playerAnimation();
-    //enemyHandler();
+    enemyHandler();
   
     //debug
     //sprintf(debug, "x %d", lives);
