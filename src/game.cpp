@@ -85,10 +85,6 @@ Game::Game()
 #if defined(PLATFORM_WEB)
 void webRun(Game &game)
 {
-    // BeginDrawing();
-    //     ClearBackground(RAYWHITE);
-    //     DrawText("Web Window", game.WIDTH/2, 200, 20, LIGHTGRAY);
-    // EndDrawing();
     switch(game.state)
     {
         case 0:
@@ -347,8 +343,8 @@ void Game::playerMovement()
 
     if(Player::rec.x < 0)
         Player::rec.x = 0;
-    if(Player::rec.x > 1880.f)
-        Player::rec.x = 1880.f;
+    // if(Player::rec.x > 1880.f)
+    //     Player::rec.x = 1880.f;
 
     if(lives < 0)
         state = 0;
@@ -672,8 +668,10 @@ void Game::menu()
     }
     if(IsKeyDown(KEY_SPACE) && menu_cursor_pos.y == 530)
     {
-        clean();
-        exit(0);
+        #if defined(PLATFORM_DESKTOP)
+            clean();
+            exit(0);
+        #endif
     }
 
     
@@ -721,7 +719,7 @@ void Game::level0()
     //inputDebug();
 
     //music
-    //UpdateMusicStream(bg_music);
+    UpdateMusicStream(bg_music);
 
     //logic
     camera();
