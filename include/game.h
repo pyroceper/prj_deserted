@@ -61,17 +61,19 @@ class Game
         Texture2D bgLayer3;
 
         Texture2D kitty_ui;
-        Texture2D kitty[5];
-        Texture2D kitty_walk[8];
-        Texture2D kitty_attack[7];
 
-        Texture2D *current_kitty = nullptr;
-        Texture2D *current_kitty_walk = nullptr;
-        Texture2D *current_kitty_attack = nullptr;
+        Texture2D kitty_idle;
+        int kitty_idle_index = 0;
 
-        Texture2D enemy_orange[7];
+        Texture2D kitty_attack;
+        int kitty_attack_index = 0;
+
+        Texture2D kitty_walk;
+        int kitty_walk_index = 0;
+
+        Texture2D enemy_orange_walk;
+        int enemy_orange_walk_index = 0;
         Texture2D enemy_orange_hurt;
-        Texture2D *current_enemy_orange = nullptr;
 
         Texture2D fish_pickup;
 

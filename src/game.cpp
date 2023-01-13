@@ -29,36 +29,13 @@ Game::Game()
 
     lamp = LoadTexture("assets/gfx/lamp.png");
 
-    kitty[0] = LoadTexture("assets/gfx/kitty/idle_1/kitty_idle1.png");
-    kitty[1] = LoadTexture("assets/gfx/kitty/idle_1/kitty_idle2.png");
-    kitty[2] = LoadTexture("assets/gfx/kitty/idle_1/kitty_idle3.png");
-    kitty[3] = LoadTexture("assets/gfx/kitty/idle_1/kitty_idle4.png");
-
-    kitty_walk[0] = LoadTexture("assets/gfx/kitty/walk/kitty_walk1.png");
-    kitty_walk[1] = LoadTexture("assets/gfx/kitty/walk/kitty_walk2.png");
-    kitty_walk[2] = LoadTexture("assets/gfx/kitty/walk/kitty_walk3.png");
-    kitty_walk[3] = LoadTexture("assets/gfx/kitty/walk/kitty_walk4.png");
-    kitty_walk[4] = LoadTexture("assets/gfx/kitty/walk/kitty_walk5.png");
-    kitty_walk[5] = LoadTexture("assets/gfx/kitty/walk/kitty_walk6.png");
-    kitty_walk[6] = LoadTexture("assets/gfx/kitty/walk/kitty_walk7.png");
-    kitty_walk[7] = LoadTexture("assets/gfx/kitty/walk/kitty_walk8.png");
-
-    kitty_attack[0] = LoadTexture("assets/gfx/kitty/attack/kitty_attack1.png");
-    kitty_attack[1] = LoadTexture("assets/gfx/kitty/attack/kitty_attack2.png");
-    kitty_attack[2] = LoadTexture("assets/gfx/kitty/attack/kitty_attack3.png");
-    kitty_attack[3] = LoadTexture("assets/gfx/kitty/attack/kitty_attack4.png");
-    kitty_attack[4] = LoadTexture("assets/gfx/kitty/attack/kitty_attack5.png");
-    kitty_attack[5] = LoadTexture("assets/gfx/kitty/attack/kitty_attack6.png");
-
     kitty_ui = LoadTexture("assets/gfx/kitty/kitty_face.png");
 
-    enemy_orange[0] = LoadTexture("assets/gfx/enemies/orange/orange1.png");
-    enemy_orange[1] = LoadTexture("assets/gfx/enemies/orange/orange2.png");
-    enemy_orange[2] = LoadTexture("assets/gfx/enemies/orange/orange3.png");
-    enemy_orange[3] = LoadTexture("assets/gfx/enemies/orange/orange4.png");
-    enemy_orange[4] = LoadTexture("assets/gfx/enemies/orange/orange5.png");
-    enemy_orange[5] = LoadTexture("assets/gfx/enemies/orange/orange6.png");
+    kitty_idle = LoadTexture("assets/gfx/kitty/kitty_idle_1.png");
+    kitty_attack = LoadTexture("assets/gfx/kitty/kitty_attack.png");
+    kitty_walk = LoadTexture("assets/gfx/kitty/kitty_walk.png");
 
+    enemy_orange_walk = LoadTexture("assets/gfx/enemies/orange/orange_walk.png");
     enemy_orange_hurt = LoadTexture("assets/gfx/enemies/orange/hurt.png");
 
     fx_hurt = LoadSound("assets/sfx/hurt.wav");
@@ -69,15 +46,8 @@ Game::Game()
 
     PlayMusicStream(bg_music);
 
-    current_kitty = &kitty[0];
-    current_kitty_walk = &kitty_walk[0];
-    current_kitty_attack = &kitty_attack[0];
-
-    current_enemy_orange = &enemy_orange[0];
-
     fish_pickup = LoadTexture("assets/gfx/fish.png");
     
-
     Player::left = Player::right = Player::top = Player::bottom = false;
 
 }
@@ -358,68 +328,68 @@ void Game::playerAnimation()
     if(Player::animation_idle_tick > 0.2f)
     {
         Player::animation_idle_tick = 0.f;
-        if(current_kitty == &kitty[0])
+        if(kitty_idle_index == 0)
         {
-            current_kitty = &kitty[1];
+            kitty_idle_index += 16;
             return;
         }
-        if(current_kitty == &kitty[1])
+        if(kitty_idle_index == 16)
         {
-            current_kitty = &kitty[2];
+            kitty_idle_index += 16;
             return;
         }
-        if(current_kitty == &kitty[2])
+        if(kitty_idle_index == 32)
         {
-            current_kitty = &kitty[3];
+            kitty_idle_index += 16;
             return;
         }
-        if(current_kitty == &kitty[3])
+        if(kitty_idle_index == 48)
         {
-            current_kitty = &kitty[0];
+            kitty_idle_index = 0;
             return;
         }
     }
     if(Player::animation_walk_tick > 0.1f)
     {
         Player::animation_walk_tick = 0.f;
-        if(current_kitty_walk == &kitty_walk[0])
+        if(kitty_walk_index == 0)
         {
-            current_kitty_walk = &kitty_walk[1];
+            kitty_walk_index += 16;
             return;
         }
-        if(current_kitty_walk == &kitty_walk[1])
+        if(kitty_walk_index == 16)
         {
-            current_kitty_walk = &kitty_walk[2];
+            kitty_walk_index += 16;
             return;
         }
-        if(current_kitty_walk == &kitty_walk[2])
+        if(kitty_walk_index == 32)
         {
-            current_kitty_walk = &kitty_walk[3];
+            kitty_walk_index += 16;
             return;
         }
-        if(current_kitty_walk == &kitty_walk[3])
+        if(kitty_walk_index == 48)
         {
-            current_kitty_walk = &kitty_walk[4];
+            kitty_walk_index += 16;
             return;
         }
-        if(current_kitty_walk == &kitty_walk[4])
+        if(kitty_walk_index == 64)
         {
-            current_kitty_walk = &kitty_walk[5];
+            kitty_walk_index += 16;
             return;
         }
-        if(current_kitty_walk == &kitty_walk[5])
+        if(kitty_walk_index == 80)
         {
-            current_kitty_walk = &kitty_walk[6];
+            kitty_walk_index += 16;
             return;
         }
-        if(current_kitty_walk == &kitty_walk[6])
+        if(kitty_walk_index == 96)
         {
-            current_kitty_walk = &kitty_walk[7];
+            kitty_walk_index += 16;
             return;
         }
-        if(current_kitty_walk == &kitty_walk[7])
+        if(kitty_walk_index == 112)
         {
-            current_kitty_walk = &kitty_walk[0];
+            kitty_walk_index = 0;
             return;
         }
     }
@@ -427,37 +397,42 @@ void Game::playerAnimation()
     if(Player::animation_attack_tick > 0.15f)
     {
         Player::animation_attack_tick = 0.f;
-        if(current_kitty_attack == &kitty_attack[0])
+        if(kitty_attack_index == 0)
         {
-            current_kitty_attack = &kitty_attack[1];
+            kitty_attack_index += 16;
             return;
         }
-        if(current_kitty_attack == &kitty_attack[1])
+        if(kitty_attack_index == 16)
         {
-            current_kitty_attack = &kitty_attack[2];
+            kitty_attack_index += 16;
             return;
         }
-        if(current_kitty_attack == &kitty_attack[2])
+        if(kitty_attack_index == 32)
         {
-            current_kitty_attack = &kitty_attack[3];
+            kitty_attack_index += 16;
             return;
         }
-        if(current_kitty_attack == &kitty_attack[3])
+        if(kitty_attack_index == 48)
         {
-            current_kitty_attack = &kitty_attack[4];
+            kitty_attack_index += 16;
             return;
         }
-        if(current_kitty_attack == &kitty_attack[4])
+        if(kitty_attack_index == 64)
         {
-            current_kitty_attack = &kitty_attack[5];
+            kitty_attack_index += 16;
             return;
         }
-        if(current_kitty_attack == &kitty_attack[5])
+        if(kitty_attack_index == 64)
+        {
+            kitty_attack_index += 16;
+            return;
+        }
+        if(kitty_attack_index == 80)
         {
             Player::is_attack = false;
-            current_kitty_attack = &kitty_attack[0];
+            kitty_attack_index = 0;
             return;
-        }   
+        }  
     }
 
 }
@@ -532,41 +507,36 @@ void Game::enemyAnimation(int index)
     if(Enemy::animation_tick[index] > 0.2f)
     {
         Enemy::animation_tick[index] = 0.f;
-        if(current_enemy_orange == &enemy_orange[0])
+        if(enemy_orange_walk_index == 0)
         {
-            current_enemy_orange = &enemy_orange[1];
+            enemy_orange_walk_index += 32;
             return;
         }
-        if(current_enemy_orange == &enemy_orange[1])
+        if(enemy_orange_walk_index == 32)
         {
-            current_enemy_orange = &enemy_orange[2];
+            enemy_orange_walk_index += 32;
             return;
         }
-        if(current_enemy_orange == &enemy_orange[2])
+        if(enemy_orange_walk_index == 64)
         {
-            current_enemy_orange = &enemy_orange[3];
+            enemy_orange_walk_index += 32;
             return;
         }
-        if(current_enemy_orange == &enemy_orange[3])
+        if(enemy_orange_walk_index == 96)
         {
-            current_enemy_orange = &enemy_orange[4];
+            enemy_orange_walk_index += 32;
             return;
         }
-        if(current_enemy_orange == &enemy_orange[4])
+        if(enemy_orange_walk_index == 128)
         {
-            current_enemy_orange = &enemy_orange[5];
+            enemy_orange_walk_index += 32;
             return;
         }
-        if(current_enemy_orange == &enemy_orange[5])
+        if(enemy_orange_walk_index == 160)
         {
-            current_enemy_orange = &enemy_orange[0];
+            enemy_orange_walk_index = 0;
             return;
         }
-        if(current_enemy_orange == &enemy_orange[6])
-        {
-            current_enemy_orange = &enemy_orange[0];
-            return;
-        }    
     }
 
 }
@@ -617,21 +587,21 @@ void Game::render()
             if(Pickup::is_active[i])
                 DrawTextureEx(fish_pickup, {Pickup::rect[i].x - offsetX, Pickup::rect[i].y - offsetY}, 0.0f, 1.45f, WHITE);
         }
-        if(!Player::is_running && !Player::is_jump && !Player::is_attack)
-            DrawTexturePro(*current_kitty, (Rectangle){0, 0, static_cast<float>(16 * Player::is_left), 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0,0}, 0.f, WHITE);
+        if(!Player::is_running && !Player::is_jump && !Player::is_attack && !Player::fall_speed)
+            DrawTexturePro(kitty_idle, (Rectangle){static_cast<float>(kitty_idle_index), 0, static_cast<float>(16 * Player::is_left), 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0, 0}, 0.f, WHITE);
         else if(Player::is_jump || Player::fall_speed)
-            DrawTexturePro(kitty_walk[5], (Rectangle){0, 0, static_cast<float>(16 * Player::is_left), 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0,0}, 0.f, WHITE);
+            DrawTexturePro(kitty_walk, (Rectangle){80.f, 0, static_cast<float>(16 * Player::is_left), 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0,0}, 0.f, WHITE);
         else if(!Player::is_running && !Player::is_jump && Player::is_attack)
-            DrawTexturePro(*current_kitty_attack, (Rectangle){0, 0, static_cast<float>(16 * Player::is_left), 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0,0}, 0.f, WHITE);
+            DrawTexturePro(kitty_attack, (Rectangle){static_cast<float>(kitty_attack_index), 0, static_cast<float>(16 * Player::is_left), 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0, 0}, 0.f, WHITE);
         else 
-            DrawTexturePro(*current_kitty_walk, (Rectangle){0, 0, static_cast<float>(16 * Player::is_left), 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0,0}, 0.f, WHITE);
+            DrawTexturePro(kitty_walk, (Rectangle){static_cast<float>(kitty_walk_index), 0, static_cast<float>(16 * Player::is_left), 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0, 0}, 0.f, WHITE);
 
         for(int i=0;i<num_of_active_enemies;i++)
         {
             //DrawRectangle(Enemy::rect[i].x - offsetX, Enemy::rect[i].y - offsetY, 32, 32, RED);
             // DrawTexture(enemy_orange[0], Enemy::rect[i].x - offsetX, Enemy::rect[i].y - offsetY, WHITE);
             if(Enemy::is_active[i])
-                DrawTexturePro(*current_enemy_orange, (Rectangle){0, 0, static_cast<float>(32 * Enemy::is_left[i]), 32}, (Rectangle){Enemy::rect[i].x - offsetX, Enemy::rect[i].y - offsetY - 32, 64, 64}, {0,0}, 0.f, WHITE);
+                DrawTexturePro(enemy_orange_walk, (Rectangle){static_cast<float>(enemy_orange_walk_index), 0, static_cast<float>(32 * Enemy::is_left[i]), 32}, (Rectangle){Enemy::rect[i].x - offsetX, Enemy::rect[i].y - offsetY - 32, 64, 64}, {0,0}, 0.f, WHITE);
             else if(Enemy::is_dead[i] && Enemy::death_timer[i] < 1.0f)
                 DrawTexturePro(enemy_orange_hurt, (Rectangle){0, 0, static_cast<float>(32 * Enemy::is_left[i]), 32}, (Rectangle){Enemy::rect[i].x - offsetX, Enemy::rect[i].y - offsetY - 32, 64, 64}, {0,0}, 0.f, WHITE);
  
@@ -756,8 +726,6 @@ void Game::run()
 
 void Game::clean()
 {
-    current_kitty = current_kitty_walk = current_kitty_attack = nullptr;
-    current_enemy_orange = nullptr;
     UnloadTexture(title);
     UnloadTexture(tx_menu);
     UnloadTexture(bgLayer1);
@@ -768,18 +736,10 @@ void Game::clean()
     UnloadTexture(block[2]);
     UnloadTexture(lamp);
     UnloadTexture(kitty_ui);
-    for(int i=0;i<4;i++)
-    {
-        UnloadTexture(kitty[i]);
-    }
-    for(int i=0;i<8;i++)
-    {
-        UnloadTexture(kitty_walk[i]);
-    }
-    for(int i=0;i<6;i++)
-    {
-        UnloadTexture(enemy_orange[i]);
-    }
+    UnloadTexture(kitty_idle);
+    UnloadTexture(kitty_attack);
+    UnloadTexture(kitty_walk);
+    UnloadTexture(enemy_orange_walk);
     UnloadTexture(enemy_orange_hurt);
     UnloadTexture(fish_pickup);
     UnloadSound(fx_hurt);
