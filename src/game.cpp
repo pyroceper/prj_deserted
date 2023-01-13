@@ -328,17 +328,7 @@ void Game::playerAnimation()
     if(Player::animation_idle_tick > 0.2f)
     {
         Player::animation_idle_tick = 0.f;
-        if(kitty_idle_index == 0)
-        {
-            kitty_idle_index += 16;
-            return;
-        }
-        if(kitty_idle_index == 16)
-        {
-            kitty_idle_index += 16;
-            return;
-        }
-        if(kitty_idle_index == 32)
+        if(kitty_idle_index >= 0)
         {
             kitty_idle_index += 16;
             return;
@@ -352,37 +342,7 @@ void Game::playerAnimation()
     if(Player::animation_walk_tick > 0.1f)
     {
         Player::animation_walk_tick = 0.f;
-        if(kitty_walk_index == 0)
-        {
-            kitty_walk_index += 16;
-            return;
-        }
-        if(kitty_walk_index == 16)
-        {
-            kitty_walk_index += 16;
-            return;
-        }
-        if(kitty_walk_index == 32)
-        {
-            kitty_walk_index += 16;
-            return;
-        }
-        if(kitty_walk_index == 48)
-        {
-            kitty_walk_index += 16;
-            return;
-        }
-        if(kitty_walk_index == 64)
-        {
-            kitty_walk_index += 16;
-            return;
-        }
-        if(kitty_walk_index == 80)
-        {
-            kitty_walk_index += 16;
-            return;
-        }
-        if(kitty_walk_index == 96)
+        if(kitty_walk_index >= 0)
         {
             kitty_walk_index += 16;
             return;
@@ -507,27 +467,7 @@ void Game::enemyAnimation(int index)
     if(Enemy::animation_tick[index] > 0.2f)
     {
         Enemy::animation_tick[index] = 0.f;
-        if(enemy_orange_walk_index == 0)
-        {
-            enemy_orange_walk_index += 32;
-            return;
-        }
-        if(enemy_orange_walk_index == 32)
-        {
-            enemy_orange_walk_index += 32;
-            return;
-        }
-        if(enemy_orange_walk_index == 64)
-        {
-            enemy_orange_walk_index += 32;
-            return;
-        }
-        if(enemy_orange_walk_index == 96)
-        {
-            enemy_orange_walk_index += 32;
-            return;
-        }
-        if(enemy_orange_walk_index == 128)
+        if(enemy_orange_walk_index >= 0)
         {
             enemy_orange_walk_index += 32;
             return;
