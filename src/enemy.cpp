@@ -9,6 +9,7 @@ namespace Enemy
     int is_left[50];// 1 -> right, -1 -> left
     bool is_active[50] = {0};
     bool is_dead[50] = {0};
+    bool is_attack[50] = {0};
     Type type[50];
     float animation_tick[50] = {0};
     float animation_death_tick[50] = {0};

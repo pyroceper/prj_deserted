@@ -19,6 +19,8 @@
 const int ROWS = 120;
 const int COLS = 120;
 
+//TODO
+// write better animation system :/
 class Game
 {
     public:
@@ -74,6 +76,12 @@ class Game
         Texture2D enemy_orange_walk;
         int enemy_orange_walk_index = 0;
         Texture2D enemy_orange_hurt;
+
+        Texture2D enemy_rat_walk;
+        int enemy_rat_walk_index = 0;
+
+        Texture2D enemy_rat_attack;
+        int enemy_rat_attack_index = 0;
 
         Texture2D fish_pickup;
 

@@ -13,7 +13,8 @@ namespace Enemy
     extern int is_left[50];
     extern bool is_active[50];
     extern bool is_dead[50];
-    enum Type { PATROL, NONE};
+    extern bool is_attack[50];
+    enum Type { PATROL, PATROL_ATTACKER, NONE};
     extern Type type[50];
     extern float animation_tick[50];
     extern float animation_death_tick[50];
