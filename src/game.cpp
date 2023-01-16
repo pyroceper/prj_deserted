@@ -345,32 +345,7 @@ void Game::playerAnimation()
     if(Player::animation_attack_tick > 0.15f)
     {
         Player::animation_attack_tick = 0.f;
-        if(kitty_attack_index == 0)
-        {
-            kitty_attack_index += 16;
-            return;
-        }
-        if(kitty_attack_index == 16)
-        {
-            kitty_attack_index += 16;
-            return;
-        }
-        if(kitty_attack_index == 32)
-        {
-            kitty_attack_index += 16;
-            return;
-        }
-        if(kitty_attack_index == 48)
-        {
-            kitty_attack_index += 16;
-            return;
-        }
-        if(kitty_attack_index == 64)
-        {
-            kitty_attack_index += 16;
-            return;
-        }
-        if(kitty_attack_index == 64)
+        if(kitty_attack_index < 80)
         {
             kitty_attack_index += 16;
             return;
