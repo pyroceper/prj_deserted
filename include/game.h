@@ -19,8 +19,6 @@
 const int ROWS = 120;
 const int COLS = 120;
 
-//TODO
-// write better animation system :/
 class Game
 {
     public:

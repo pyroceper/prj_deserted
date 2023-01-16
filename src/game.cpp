@@ -334,70 +334,12 @@ void Game::playerAnimation()
     if(Player::animation_idle_tick > 0.2f)
     {
         Player::animation_idle_tick = 0.f;
-        if(kitty_idle_index == 0)
-        {
-            kitty_idle_index += 16;
-            return;
-        }
-        if(kitty_idle_index == 16)
-        {
-            kitty_idle_index += 16;
-            return;
-        }
-        if(kitty_idle_index == 32)
-        {
-            kitty_idle_index += 16;
-            return;
-        }
-        if(kitty_idle_index == 48)
-        {
-            kitty_idle_index = 0;
-            return;
-        }
+        kitty_idle_index = (kitty_idle_index + 16) % 48;
     }
     if(Player::animation_walk_tick > 0.1f)
     {
         Player::animation_walk_tick = 0.f;
-        if(kitty_walk_index == 0)
-        {
-            kitty_walk_index += 16;
-            return;
-        }
-        if(kitty_walk_index == 16)
-        {
-            kitty_walk_index += 16;
-            return;
-        }
-        if(kitty_walk_index == 32)
-        {
-            kitty_walk_index += 16;
-            return;
-        }
-        if(kitty_walk_index == 48)
-        {
-            kitty_walk_index += 16;
-            return;
-        }
-        if(kitty_walk_index == 64)
-        {
-            kitty_walk_index += 16;
-            return;
-        }
-        if(kitty_walk_index == 80)
-        {
-            kitty_walk_index += 16;
-            return;
-        }
-        if(kitty_walk_index == 96)
-        {
-            kitty_walk_index += 16;
-            return;
-        }
-        if(kitty_walk_index == 112)
-        {
-            kitty_walk_index = 0;
-            return;
-        }
+        kitty_walk_index = (kitty_walk_index + 16) % 112;
     }
 
     if(Player::animation_attack_tick > 0.15f)
@@ -515,36 +457,7 @@ void Game::enemyAnimation(int index)
         if(Enemy::animation_tick[index] > 0.2f)
         {
             Enemy::animation_tick[index] = 0.f;
-            if(enemy_orange_walk_index == 0)
-            {
-                enemy_orange_walk_index += 32;
-                return;
-            }
-            if(enemy_orange_walk_index == 32)
-            {
-                enemy_orange_walk_index += 32;
-                return;
-            }
-            if(enemy_orange_walk_index == 64)
-            {
-                enemy_orange_walk_index += 32;
-                return;
-            }
-            if(enemy_orange_walk_index == 96)
-            {
-                enemy_orange_walk_index += 32;
-                return;
-            }
-            if(enemy_orange_walk_index == 128)
-            {
-                enemy_orange_walk_index += 32;
-                return;
-            }
-            if(enemy_orange_walk_index == 160)
-            {
-                enemy_orange_walk_index = 0;
-                return;
-            }
+            enemy_orange_walk_index = (enemy_orange_walk_index + 32) % 160;
         }
     }
     if(Enemy::type[index] == Enemy::Type::PATROL_ATTACKER)
@@ -552,46 +465,7 @@ void Game::enemyAnimation(int index)
        if(Enemy::animation_tick[index] > 0.2f)
         {
             Enemy::animation_tick[index] = 0.f;
-            if(enemy_rat_walk_index == 0)
-            {
-                enemy_rat_walk_index += 32;
-                return;
-            }
-            if(enemy_rat_walk_index == 32)
-            {
-                enemy_rat_walk_index += 32;
-                return;
-            }
-            if(enemy_rat_walk_index == 64)
-            {
-                enemy_rat_walk_index += 32;
-                return;
-            }
-            if(enemy_rat_walk_index == 96)
-            {
-                enemy_rat_walk_index += 32;
-                return;
-            }
-            if(enemy_rat_walk_index == 128)
-            {
-                enemy_rat_walk_index += 32;
-                return;
-            }
-            if(enemy_rat_walk_index == 160)
-            {
-                enemy_rat_walk_index += 32;
-                return;
-            }
-            if(enemy_rat_walk_index == 192)
-            {
-                enemy_rat_walk_index += 32;
-                return;
-            }
-            if(enemy_rat_walk_index == 224)
-            {
-                enemy_rat_walk_index = 0;
-                return;
-            }
+            enemy_rat_walk_index = (enemy_rat_walk_index + 32) % 224;
         } 
     }
 }
