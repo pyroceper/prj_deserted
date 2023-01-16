@@ -14,4 +14,5 @@ namespace Enemy
     float animation_tick[50] = {0};
     float animation_death_tick[50] = {0};
     float death_timer[50] = {0};
+    float attack_timer[50] = {0};
 };

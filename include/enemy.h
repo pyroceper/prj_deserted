@@ -18,6 +18,7 @@ namespace Enemy
     extern Type type[50];
     extern float animation_tick[50];
     extern float animation_death_tick[50];
+    extern float attack_timer[50];
     extern float death_timer[50];
 };
 
