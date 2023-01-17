@@ -46,6 +46,8 @@ class Game
         int num_of_flip_boxes = 0;
         int num_of_pickups = 0;
 
+        Rectangle level_end;
+
         char debug[250] = {0};
 
         int lives = 1;
@@ -79,7 +81,7 @@ class Game
         int enemy_rat_walk_index = 0;
 
         Texture2D enemy_rat_attack;
-        int enemy_rat_attack_index = 0;
+        int enemy_rat_attack_index[50] = {0};
 
         Texture2D fish_pickup;
 
@@ -96,6 +98,12 @@ class Game
 
         Music bg_music;
 
+        bool loaded_level = false;
+
+        void reset();
+        void resetEnemies();
+        void resetPlayerStats();
+        void loadAssets();
         void loadLevel(const std::string fileName);
         void inputHandler();
         void collisionHandler();
@@ -116,7 +124,7 @@ class Game
         void levelPrintDebug();
 
         void menu();
-        void level0();
+        void levelHandler();
         void clean();
 
 };

@@ -8,6 +8,32 @@ Game::Game()
         SetTargetFPS(FPS);
     #endif
 
+    loadAssets();
+    
+}
+
+#if defined(PLATFORM_WEB)
+void webRun(Game &game)
+{
+    switch(game.state)
+    {
+        case 0:
+                game.menu();
+                break;
+        case 1:
+                if(!game.loaded_level)
+                {
+                    game.loadLevel("assets/levels/level1.txt");
+                    game.loaded_level = true;
+                }
+                game.levelHandler();
+                break;
+    }
+}
+#endif
+
+void Game::resetEnemies()
+{
     for(int i=0;i<50;i++)
     {
         Enemy::is_active[i] = false;
@@ -17,7 +43,22 @@ Game::Game()
         Enemy::is_attack[i] = false;
         Enemy::death_timer[i] = Enemy::attack_timer[i] = 0.f;
     }
+}
 
+void Game::reset()
+{
+    resetEnemies();
+    level_end.x =  level_end.y = level_end.width = level_end.height = 0;
+    Player::left = Player::right = Player::top = Player::bottom = false;
+}
+
+void Game::resetPlayerStats()
+{
+    lives = 1;
+}
+
+void Game::loadAssets()
+{
     title = LoadTexture("assets/gfx/title.png");
     tx_menu = LoadTexture("assets/gfx/menu.png");
 
@@ -52,25 +93,8 @@ Game::Game()
     PlayMusicStream(bg_music);
 
     fish_pickup = LoadTexture("assets/gfx/fish.png");
-    
-    Player::left = Player::right = Player::top = Player::bottom = false;
-
 }
 
-#if defined(PLATFORM_WEB)
-void webRun(Game &game)
-{
-    switch(game.state)
-    {
-        case 0:
-                game.menu();
-                break;
-        case 1:
-                game.level0();
-                break;
-    }
-}
-#endif
 
 void Game::loadLevel(const std::string fileName)
 {
@@ -81,6 +105,7 @@ void Game::loadLevel(const std::string fileName)
     int n;
     int r, c;
 
+    reset();
     fscanf(level, "%d %d", &c, &r);
     rows = r;
     cols = c;
@@ -127,16 +152,21 @@ void Game::loadLevel(const std::string fileName)
         FlipBox::rect[i].y = y;
         num_of_flip_boxes++;
     }
-    // fscanf(level, "%d", &n);
-    // for(int i=0;i<n;i++)
-    // {
-    //     fscanf(level, "%f %f", &x, &y);
-    //     Pickup::rect[i].x = x;
-    //     Pickup::rect[i].y = y;
-    //     Pickup::rect[i].width = Pickup::rect[i].height = 32;
-    //     Pickup::is_active[i] = true;
-    //     num_of_pickups++;
-    // }
+    fscanf(level, "%d", &n);
+    for(int i=0;i<n;i++)
+    {
+        fscanf(level, "%f %f", &x, &y);
+        Pickup::rect[i].x = x;
+        Pickup::rect[i].y = y;
+        Pickup::rect[i].width = Pickup::rect[i].height = 32;
+        Pickup::is_active[i] = true;
+        num_of_pickups++;
+    }
+    fscanf(level, "%f %f %f %f", &x, &y, &w, &h);
+    level_end.x = x;
+    level_end.y = y;
+    level_end.width = w;
+    level_end.height = h;
 
     fclose(level);
     printf("[debug] loading level done!\n");
@@ -257,6 +287,13 @@ void Game::collisionHandler()
     {
         Player::rec.x -= Player::collision_array[1];
         Player::right = false;
+    }
+
+    if(Collision::AABB(Player::rec, level_end))
+    {
+        state = 0;
+        resetPlayerStats(); //temp
+        loaded_level = false;
     }
 
     //ono almost out of time ;-;
@@ -424,7 +461,7 @@ void Game::enemyHandler()
             enemyCollisionHandler(i);
             enemyAnimation(i);
         }
-        else if(!Enemy::is_active[i] && Enemy::is_dead)
+        else if(!Enemy::is_active[i] && Enemy::is_dead[i])
         {
             Enemy::death_timer[i] += 1.0f * GetFrameTime();
             if(Enemy::death_timer[i] > 0.1f)
@@ -458,16 +495,16 @@ void Game::enemyAnimation(int index)
         }
         else 
         {
-            if(Enemy::animation_tick[index] > 0.2f && enemy_rat_attack_index < 352)
+            if(Enemy::animation_tick[index] > 0.2f && enemy_rat_attack_index[index] < 352)
             {
                 Enemy::animation_tick[index] = 0.f;
-                enemy_rat_attack_index += 32;
+                enemy_rat_attack_index[index] += 32;
                 return;
             }
-            if(Enemy::animation_tick[index] > 0.2f && enemy_rat_attack_index == 352)
+            if(Enemy::animation_tick[index] > 0.2f && enemy_rat_attack_index[index] == 352)
             {
                 Enemy::is_attack[index] = false;
-                enemy_rat_attack_index = 0;
+                enemy_rat_attack_index[index] = 0;
                 Enemy::animation_tick[index] = 0.f;
                 return;
             }
@@ -548,7 +585,7 @@ void Game::render()
                 if(!Enemy::is_attack[i])
                     DrawTexturePro(enemy_rat_walk, (Rectangle){static_cast<float>(enemy_rat_walk_index), 0, static_cast<float>(32 * Enemy::is_left[i]), 32}, (Rectangle){Enemy::rect[i].x - offsetX - 32, Enemy::rect[i].y - offsetY - 64, 96, 96}, {0,0}, 0.f, WHITE);
                 else
-                    DrawTexturePro(enemy_rat_attack, (Rectangle){static_cast<float>(enemy_rat_attack_index), 0, static_cast<float>(32 * Enemy::is_left[i]), 32}, (Rectangle){Enemy::rect[i].x - offsetX - 32, Enemy::rect[i].y - offsetY - 64, 96, 96}, {0,0}, 0.f, WHITE);
+                    DrawTexturePro(enemy_rat_attack, (Rectangle){static_cast<float>(enemy_rat_attack_index[i]), 0, static_cast<float>(32 * Enemy::is_left[i]), 32}, (Rectangle){Enemy::rect[i].x - offsetX - 32, Enemy::rect[i].y - offsetY - 64, 96, 96}, {0,0}, 0.f, WHITE);
             }
         }
         DrawTextureEx(kitty_ui, {0.f, 0.f}, 0.0f, 5.0f, WHITE);
@@ -556,6 +593,7 @@ void Game::render()
         // DrawRectangle(FlipBox::rect[0].x - offsetX, FlipBox::rect[0].y - offsetY, 32, 32, ORANGE);
         // DrawRectangle(FlipBox::rect[1].x - offsetX, FlipBox::rect[1].y - offsetY, 32, 32, ORANGE);
         // DrawRectangle(FlipBox::rect[2].x - offsetX, FlipBox::rect[2].y - offsetY, 32, 32, ORANGE);
+        DrawRectangle(level_end.x - offsetX, level_end.y, level_end.width, level_end.height, ORANGE);
         DrawText(debug, 72, 25, 40, GRAY);
     EndDrawing();
 }
@@ -575,9 +613,7 @@ void Game::menu()
     }
     if(IsKeyDown(KEY_SPACE) && menu_cursor_pos.y == 420)
     {
-        lives = 1;
-        loadLevel("assets/levels/level1.txt");
-        levelPrintDebug();
+        resetPlayerStats();
         state = 1;
     }
     if(IsKeyDown(KEY_SPACE) && menu_cursor_pos.y == 530)
@@ -626,7 +662,7 @@ void Game::renderTest()
         EndDrawing();
 }
 
-void Game::level0()
+void Game::levelHandler()
 {
     //input
     inputHandler();
@@ -644,8 +680,9 @@ void Game::level0()
     enemyHandler();
   
     //debug
-    sprintf(debug, "attack = %d, index = %d, timer = %f", Enemy::is_attack[1], enemy_rat_attack_index, Enemy::attack_timer[1]);
-  
+    //sprintf(debug, "attack = %d, index = %d, timer = %f", Enemy::is_attack[1], enemy_rat_attack_index[1], Enemy::attack_timer[1]);
+    sprintf(debug, "x %d", lives);
+
     //render
     render();
     //renderTest();
@@ -661,7 +698,13 @@ void Game::run()
                     menu();
                     break;
             case 1:
-                    level0();
+                    if(!loaded_level)
+                    {
+                        loadLevel("assets/levels/level1.txt");
+                        levelPrintDebug();
+                        loaded_level = true;
+                    }
+                    levelHandler();
                     break;
         }
 
