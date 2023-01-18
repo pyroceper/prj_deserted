@@ -28,6 +28,15 @@ void webRun(Game &game)
                 }
                 game.levelHandler();
                 break;
+
+        case 2:
+                if(!game.loaded_level)
+                {
+                    game.loadLevel("assets/levels/level2.txt");
+                    game.loaded_level = true;
+                }
+                game.levelHandler();
+                break;
     }
 }
 #endif
@@ -291,9 +300,10 @@ void Game::collisionHandler()
 
     if(Collision::AABB(Player::rec, level_end))
     {
-        state = 0;
-        resetPlayerStats(); //temp
+        printf("state = %d\n", state);
+        state++;
         loaded_level = false;
+        //resetPlayerStats(); //temp
     }
 
     //ono almost out of time ;-;
@@ -323,7 +333,7 @@ void Game::camera()
     Cam::followTarget(Player::rec.x, Player::rec.y, 740, 740);
     offsetX = static_cast<int>(Cam::offset.x);
     offsetY = static_cast<int>(Cam::offset.y);
-    offsetY -= 270;
+    offsetY -= 230;
     // if(offsetX > 640)
     //     offsetX = 640;
 }
@@ -559,7 +569,7 @@ void Game::render()
                 DrawTextureEx(fish_pickup, {Pickup::rect[i].x - offsetX, Pickup::rect[i].y - offsetY}, 0.0f, 1.45f, WHITE);
         }
 
-        DrawRectangle(Player::rec.x - offsetX, Player::rec.y - offsetY - 10, 32, 32, GREEN); //debug
+        //DrawRectangle(Player::rec.x - offsetX, Player::rec.y - offsetY - 10, 32, 32, GREEN); //debug
 
         if(!Player::is_running && !Player::is_jump && !Player::is_attack && !Player::fall_speed)
             DrawTexturePro(kitty_idle, (Rectangle){static_cast<float>(kitty_idle_index), 0, static_cast<float>(16 * Player::is_left), 16}, (Rectangle){Player::rec.x - offsetX - 10, Player::rec.y - offsetY - 32, 16 * 3, 16 * 3}, {0, 0}, 0.f, WHITE);
@@ -573,7 +583,7 @@ void Game::render()
 
         for(int i=0;i<num_of_active_enemies;i++)
         {
-            DrawRectangle(Enemy::rect[i].x - offsetX, Enemy::rect[i].y - offsetY, 32, 32, RED);//debug
+            //DrawRectangle(Enemy::rect[i].x - offsetX, Enemy::rect[i].y - offsetY, 32, 32, RED);//debug
             // DrawTexture(enemy_orange[0], Enemy::rect[i].x - offsetX, Enemy::rect[i].y - offsetY, WHITE);
             if(Enemy::is_active[i] && Enemy::type[i] == Enemy::Type::PATROL)
                 DrawTexturePro(enemy_orange_walk, (Rectangle){static_cast<float>(enemy_orange_walk_index), 0, static_cast<float>(32 * Enemy::is_left[i]), 32}, (Rectangle){Enemy::rect[i].x - offsetX - 16, Enemy::rect[i].y - offsetY - 32, 64, 64}, {0,0}, 0.f, WHITE);
@@ -593,7 +603,7 @@ void Game::render()
         // DrawRectangle(FlipBox::rect[0].x - offsetX, FlipBox::rect[0].y - offsetY, 32, 32, ORANGE);
         // DrawRectangle(FlipBox::rect[1].x - offsetX, FlipBox::rect[1].y - offsetY, 32, 32, ORANGE);
         // DrawRectangle(FlipBox::rect[2].x - offsetX, FlipBox::rect[2].y - offsetY, 32, 32, ORANGE);
-        DrawRectangle(level_end.x - offsetX, level_end.y, level_end.width, level_end.height, ORANGE);
+        //DrawRectangle(level_end.x - offsetX, level_end.y, level_end.width, level_end.height, ORANGE);
         DrawText(debug, 72, 25, 40, GRAY);
     EndDrawing();
 }
@@ -706,6 +716,16 @@ void Game::run()
                     }
                     levelHandler();
                     break;
+
+            case 2:
+                   if(!loaded_level)
+                   {
+                       loadLevel("assets/levels/level2.txt");
+                       levelPrintDebug();
+                       loaded_level = true;
+                   }
+                   levelHandler();
+                   break;
         }
 
     }
