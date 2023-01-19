@@ -75,6 +75,8 @@ void Game::loadAssets()
     bgLayer2 = LoadTexture("assets/gfx/background_layer_2.png");
     bgLayer3 = LoadTexture("assets/gfx/background_layer_3.png");
 
+    bg_cave = LoadTexture("assets/gfx/background_cave.png");
+
     block[0] = LoadTexture("assets/gfx/block.png");
     block[1] = LoadTexture("assets/gfx/block_plain.png");
     block[2] = LoadTexture("assets/gfx/block_grass.png");
@@ -652,23 +654,24 @@ void Game::renderTest()
 {
         BeginDrawing();
             ClearBackground(RAYWHITE);
+            DrawTextureEx(bg_cave, {0,0}, 0, 5, WHITE);
             for(int y=0;y<rows;y++)
             {
                 for(int x=0;x<cols;x++)
                 {
-                    if(map[y][x] == 2)
-                        //DrawRectangle(x * 32, y * 32, 32, 32, YELLOW);
-                        DrawTexture(block[2], (x * 32) - offsetX, (y * 32) - offsetY, WHITE);
+                    if(map[y][x])
+                        DrawRectangle((x * 32) - offsetX, (y * 32) - offsetY, 32, 32, YELLOW);
+                        //DrawTexture(block[2], (x * 32) - offsetX, (y * 32) - offsetY, WHITE);
                     if(map[y][x] == 17)
                         DrawTexture(block[1], (x * 32) - offsetX, (y * 32) - offsetY, WHITE);
                 }
             }
             DrawRectangle(player_debug.x - offsetX, player_debug.y - offsetY, 32, 32, RED);
-            //DrawText("working", 0, 0, 20, YELLOW);
-            for(int i=0;i<collisionBoxes.size();i++)
-            {
-                DrawRectangle(collisionBoxes[i].x - offsetX, collisionBoxes[i].y - offsetY, collisionBoxes[i].width, collisionBoxes[i].height, GREEN);
-            }
+            // //DrawText("working", 0, 0, 20, YELLOW);
+            // for(int i=0;i<collisionBoxes.size();i++)
+            // {
+            //     DrawRectangle(collisionBoxes[i].x - offsetX, collisionBoxes[i].y - offsetY, collisionBoxes[i].width, collisionBoxes[i].height, GREEN);
+            // }
         EndDrawing();
 }
 
@@ -704,9 +707,9 @@ void Game::run()
     {
         switch(state)
         {
-            case 0:
-                    menu();
-                    break;
+            // case 0:
+            //         menu();
+            //         break;
             case 1:
                     if(!loaded_level)
                     {
@@ -726,6 +729,18 @@ void Game::run()
                    }
                    levelHandler();
                    break;
+            
+            case 0:
+            case 3:
+                   if(!loaded_level)
+                   {
+                       loadLevel("assets/levels/level3.txt");
+                       loaded_level = true;
+                   }
+                   inputDebug();
+                   cameraDebug();
+                   renderTest(); //test cave level
+                   break;
         }
 
     }
@@ -738,6 +753,7 @@ void Game::clean()
     UnloadTexture(bgLayer1);
     UnloadTexture(bgLayer2);
     UnloadTexture(bgLayer3);
+    UnloadTexture(bg_cave);
     UnloadTexture(block[0]);
     UnloadTexture(block[1]);
     UnloadTexture(block[2]);

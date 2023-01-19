@@ -61,6 +61,7 @@ class Game
         Texture2D bgLayer1;
         Texture2D bgLayer2;
         Texture2D bgLayer3;
+        Texture2D bg_cave;
 
         Texture2D kitty_ui;
 
