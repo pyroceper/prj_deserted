@@ -57,6 +57,8 @@ class Game
         Texture2D tx_menu;
 
         Texture2D block[3];
+        Texture2D cave;
+        Texture2D scaffolding;
         Texture2D lamp;
         Texture2D bgLayer1;
         Texture2D bgLayer2;
@@ -123,6 +125,9 @@ class Game
         void renderTest();
         void cameraDebug();
         void levelPrintDebug();
+
+        //test
+        void renderCaveTest();
 
         void menu();
         void levelHandler();

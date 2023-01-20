@@ -81,6 +81,9 @@ void Game::loadAssets()
     block[1] = LoadTexture("assets/gfx/block_plain.png");
     block[2] = LoadTexture("assets/gfx/block_grass.png");
 
+    cave = LoadTexture("assets/gfx/cave.png");
+    scaffolding = LoadTexture("assets/gfx/scaffolding.png");
+
     lamp = LoadTexture("assets/gfx/lamp.png");
 
     kitty_ui = LoadTexture("assets/gfx/kitty/kitty_face.png");
@@ -650,6 +653,83 @@ void Game::menu()
     EndDrawing();
 }
 
+void Game::renderCaveTest()
+{
+    BeginDrawing();
+        ClearBackground(RAYWHITE);
+        DrawTextureEx(bg_cave, {0,0}, 0, 5, WHITE); 
+        for(int y=0;y<rows;y++)
+        {
+            for(int x=0;x<cols;x++)
+            {
+                switch(map[y][x])
+                {
+                    case 0:
+                            break;
+                    case 1:
+                            DrawTexturePro(cave, (Rectangle){0, 0, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;
+                    case 2:
+                            DrawTexturePro(cave, (Rectangle){16, 0, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;
+                    case 3:
+                            DrawTexturePro(cave, (Rectangle){32, 0, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;
+                    case 4:
+                            DrawTexturePro(cave, (Rectangle){48, 0, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;
+                    case 8:
+                            DrawTexturePro(cave, (Rectangle){0, 16, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;
+                    case 9:
+                            DrawTexturePro(cave, (Rectangle){16, 16, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;
+                    case 10:
+                            DrawTexturePro(cave, (Rectangle){32, 16, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;
+                    case 11:
+                            DrawTexturePro(cave, (Rectangle){48, 16, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;
+                    case 12:
+                            DrawTexturePro(cave, (Rectangle){64, 16, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;
+                    case 16:
+                            DrawTexturePro(cave, (Rectangle){16, 32, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;
+                    case 17:
+                            DrawTexturePro(cave, (Rectangle){32, 32, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;             
+                    case 18:
+                            DrawTexturePro(cave, (Rectangle){48, 32, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;
+                    case 20:
+                            DrawTexturePro(cave, (Rectangle){80, 32, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;
+                    case 22:
+                            DrawTexturePro(cave, (Rectangle){0, 48, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;
+                    case 23:
+                            DrawTexturePro(cave, (Rectangle){16, 48, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;
+                    case 24:
+                            DrawTexturePro(cave, (Rectangle){32, 48, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;
+                    case 27:
+                            DrawTexturePro(cave, (Rectangle){80, 48, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;
+                    case 31:
+                            DrawTexturePro(cave, (Rectangle){32, 64, 16, 16}, (Rectangle){(x * 32) - offsetX, (y * 32) - offsetY, 32, 32}, {0, 0}, 0.f, WHITE);
+                            break;
+                    default:
+                            DrawRectangle((x * 32) - offsetX, (y * 32) - offsetY, 32, 32, YELLOW);
+                }
+            }
+        }
+        DrawRectangle(player_debug.x - offsetX, player_debug.y - offsetY, 32, 32, RED);
+    EndDrawing();
+}
+
+
 void Game::renderTest()
 {
         BeginDrawing();
@@ -739,7 +819,7 @@ void Game::run()
                    }
                    inputDebug();
                    cameraDebug();
-                   renderTest(); //test cave level
+                   renderCaveTest();//renderTest(); //test cave level
                    break;
         }
 
@@ -757,6 +837,8 @@ void Game::clean()
     UnloadTexture(block[0]);
     UnloadTexture(block[1]);
     UnloadTexture(block[2]);
+    UnloadTexture(cave);
+    UnloadTexture(scaffolding);
     UnloadTexture(lamp);
     UnloadTexture(kitty_ui);
     UnloadTexture(kitty_idle);
